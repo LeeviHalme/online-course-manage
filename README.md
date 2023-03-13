@@ -47,4 +47,22 @@ This bullet-point list fill list out all features for this application and is ke
 
 # Local Setup
 
-To Be Added...
+### Requirements
+
+- [Docker](https://www.docker.com/) version **20.10.21** or greater
+
+### Setup
+
+```shell
+git clone https://github.com/LeeviHalme/online-course-manager.git
+```
+```shell
+cd online-course-manager
+```
+```shell
+docker-compose up -d --build
+```
+
+### Endpoints
+- Adminer SQL explorer: [localhost:8080](http://localhost:8080)
+- Flask app (OnlineCourseManager): [localhost:5000](http://localhost:5000)
