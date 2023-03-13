@@ -12,8 +12,8 @@ This bullet-point list fill list out all features for this application and is ke
 
 ## Tasks
 - [x] Setup Github Repo
-- [ ] Connect project to Labtools
-- [ ] Provide a roadmap and feature list for this project
+- [x] Connect project to Labtools
+- [x] Provide a roadmap and feature list for this project
 - [ ] Provide app building instructions for peer reviewers
 
 ## Features
