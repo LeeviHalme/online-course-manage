@@ -1,0 +1,17 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: [self-hosted, production]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Shutdown Docker Compose
+      run: docker-compose down
+    - name: Startup Docker Compose And Build the Docker image
+      run: docker-compose -f docker-compose.prod.yml up -d --build
