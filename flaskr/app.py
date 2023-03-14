@@ -1,7 +1,11 @@
 import os
 from flask import Flask, render_template
+from dotenv import load_dotenv
 
 def create_app(test_config=None):
+  # load .env file
+  load_dotenv()
+
   # create and configure the app
   app = Flask(__name__, instance_relative_config=True)
 
@@ -14,6 +18,6 @@ def create_app(test_config=None):
   # a simple page that says hello
   @app.route("/")
   def index():
-    return render_template("home.html")
+    return render_template("home.html", debug=os.getenv("FLASK_DEBUG"))
 
   return app
