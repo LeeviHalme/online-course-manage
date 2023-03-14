@@ -27,6 +27,7 @@ This bullet-point list fill list out all features for this application and is ke
     - [ ] View a specific course
       - [ ] View course material (text-based) (could implement markup support)
       - [ ] View course assignments
+      - [ ] Enroll using invite code
       - [ ] View course summary
         - [ ] View statistics
         - [ ] View total awarded points
@@ -42,6 +43,7 @@ This bullet-point list fill list out all features for this application and is ke
     - [ ] Edit course
       - [ ] Change/edit course material
       - [ ] Change/edit assignments
+      - [ ] View and reset invite code
       - [ ] Add new assignment
       - [ ] Delete an assignment
 
