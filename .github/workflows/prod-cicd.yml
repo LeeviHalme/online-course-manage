@@ -13,8 +13,6 @@ jobs:
     # need checkout before using compose-action
     - uses: actions/checkout@v3
 
-    # run your docker-compose file and clean up
-    - name: Start Docker Compose
-      uses: isbang/compose-action@v1.4.1
-      with:
-        compose-file: "./docker-compose.prod.yml"
+    # re-build docker containers and restart if necessary
+    - name: Update And Build Docker Containers
+      run: docker-compose -f docker-compose.prod.yml up -d --build
