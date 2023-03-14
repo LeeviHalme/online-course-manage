@@ -1,5 +1,7 @@
 venv/
 
+.vscode
+
 .env
 .env.prod
 
