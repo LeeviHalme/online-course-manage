@@ -60,9 +60,15 @@ git clone https://github.com/LeeviHalme/online-course-manager.git
 cd online-course-manager
 ```
 ```shell
-docker-compose up -d --build
+docker-compose up --build
 ```
 
 ### Endpoints
 - Adminer SQL explorer: [localhost:8080](http://localhost:8080)
 - Flask app (OnlineCourseManager): [localhost:5000](http://localhost:5000)
+
+# Production setup
+
+```shell
+docker-compose -f docker-compose.prod.yml up -d --build
+```
