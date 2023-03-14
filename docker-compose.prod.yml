@@ -4,19 +4,13 @@ services:
     container_name: ocm-flask
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     env_file: .env
     restart: always
     ports:
-      - 5000:5000
+      - 8080:8080
   db:
     container_name: ocm-postgres
     image: "postgres:14.3"
     env_file: .env
     restart: always
-  explorer:
-    container_name: ocm-adminer
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
