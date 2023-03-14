@@ -9,6 +9,14 @@ services:
     restart: always
     ports:
       - 8080:8080
+  proxy:
+    container_name: ocm-nginx
+    image: nginx:1.23.3
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+    ports:
+      - 80:80
   db:
     container_name: ocm-postgres
     image: "postgres:14.3"
