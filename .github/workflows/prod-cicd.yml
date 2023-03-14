@@ -13,6 +13,10 @@ jobs:
     # need checkout before using compose-action
     - uses: actions/checkout@v3
 
+    # Create .env file
+    - name: Create .env file
+      run: echo "${{ secrets.PRODUCTION_DOTENV }}" > .env
+
     # re-build docker containers and restart if necessary
     # "docker compose" instead of "docker-compose" is due different
     # compose versions on the production server and locally
