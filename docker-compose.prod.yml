@@ -14,7 +14,7 @@ services:
     image: nginx:1.23.3
     restart: always
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
       - 80:80
   db:
