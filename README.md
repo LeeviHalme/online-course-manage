@@ -17,6 +17,10 @@ This bullet-point list fill list out all features for this application and is ke
 - [x] Provide app building instructions for peer reviewers
 
 ## Features
+
+Ticked = Completed & Live in Production
+
+- [x] Automatic CI/CD to a production DigitalOcean droplet running Ubuntu using docker-compose
 - [ ] Authentication
   - [ ] Ability to login using username (possibly email) and password
   - [ ] Ability to register as a teacher or as a student
