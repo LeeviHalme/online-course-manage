@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Production Docker CI/CD
 
 on:
   push:
@@ -8,10 +8,13 @@ on:
 
 jobs:
   build:
-    runs-on: [self-hosted, production]
+    runs-on: [ self-hosted, production ]
     steps:
+    # need checkout before using compose-action
     - uses: actions/checkout@v3
-    - name: Shutdown Docker Compose
-      run: docker-compose down
-    - name: Startup Docker Compose And Build the Docker image
-      run: docker-compose -f docker-compose.prod.yml up -d --build
+
+    # run your docker-compose file and clean up
+    - name: Start Docker Compose
+      uses: isbang/compose-action@v1.4.1
+      with:
+        compose-file: "./docker-compose.prod.yml"
