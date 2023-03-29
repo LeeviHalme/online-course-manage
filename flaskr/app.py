@@ -19,7 +19,12 @@ def create_app(test_config=None):
     # a simple page that says hello
     @app.route("/")
     def index():
-        return render_template("home.html", debug=os.getenv("FLASK_DEBUG"))
+        publicCourses = [
+            ("Example Course 1", "Example Description", "id1"),
+            ("Example Course 2", "Example Description", "id2"),
+            ("Example Course 3", "Example Description", "id3"),
+        ]
+        return render_template("home.html", courses=publicCourses)
 
     # app login page
     @app.route("/login")
