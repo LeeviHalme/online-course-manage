@@ -1,0 +1,39 @@
+{% extends "layouts/main.html" %} {% block content %}
+<h1 class="text-center my-5">Welcome back, please sign-in</h1>
+<form class="col-md-6 offset-md-3">
+  <div class="mb-3">
+    <label for="emailInput" class="form-label">Email address</label>
+    <input
+      type="email"
+      class="form-control"
+      id="emailInput"
+      placeholder="name@example.com"
+      required
+    />
+  </div>
+  <div class="mb-5">
+    <label for="passwordInput" class="form-label">Password</label>
+    <input
+      type="password"
+      class="form-control"
+      id="passwordInput"
+      placeholder="* * * * * * * *"
+      required
+    />
+  </div>
+  <div class="col-md-12 d-flex">
+    <div class="col-md-6">
+      <div class="d-grid">
+        <button class="btn btn-primary btn-block" type="submit">Login</button>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="d-grid">
+        <a href="/register" class="btn btn-link btn-block"
+          >Don't have an account?</a
+        >
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock content %}

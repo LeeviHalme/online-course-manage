@@ -1,0 +1,75 @@
+{% extends "layouts/main.html" %} {% block content %}
+<h1 class="text-center my-5">Register as a new user</h1>
+<form class="col-md-6 offset-md-3">
+  <div class="mb-3">
+    <label for="nameInput" class="form-label">Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="nameInput"
+      placeholder="First Last"
+      required
+    />
+  </div>
+  <div class="mb-3">
+    <label for="roleSelect" class="form-label"
+      >Select your current status</label
+    >
+    <select
+      class="form-select"
+      id="roleSelect"
+      aria-label="Select your current status"
+    >
+      <option selected disabled>Select from below</option>
+      <option value="1">Student</option>
+      <option value="2">Teacher</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="emailInput" class="form-label">Email address</label>
+    <input
+      type="email"
+      class="form-control"
+      id="emailInput"
+      placeholder="name@example.com"
+      required
+    />
+  </div>
+  <div class="mb-3">
+    <label for="passwordInput" class="form-label">Password</label>
+    <input
+      type="password"
+      class="form-control"
+      id="passwordInput"
+      placeholder="* * * * * * * *"
+      required
+    />
+  </div>
+  <div class="mb-5">
+    <label for="passwordConfirmInput" class="form-label">Password Again</label>
+    <input
+      type="password"
+      class="form-control"
+      id="passwordConfirmInput"
+      placeholder="* * * * * * * *"
+      required
+    />
+  </div>
+  <div class="col-md-12 d-flex">
+    <div class="col-md-6">
+      <div class="d-grid">
+        <button class="btn btn-primary btn-block" type="submit">
+          Register
+        </button>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="d-grid">
+        <a href="/login" class="btn btn-link btn-block"
+          >I already have an account</a
+        >
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock content %}
