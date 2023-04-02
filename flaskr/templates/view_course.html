@@ -1,0 +1,27 @@
+{% extends "layouts/main.html" %} {% block content %}
+<div class="row">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item"><a href="/courses">Courses</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{course[0]}}</li>
+    </ol>
+  </nav>
+</div>
+<div class="row">
+  <div class="col-md-9">
+    <h1 class="mb-4">{{ course[0] }}</h1>
+    <p>{{ course[1] }}</p>
+  </div>
+  <div class="col-md-3">
+    <div class="row">
+      <b>Enroll yourself into the course:</b>
+    </div>
+    <div class="row">
+      <small class="text-secondary my-3"
+        >You need to be logged in to enroll!</small
+      >
+    </div>
+  </div>
+</div>
+{% endblock content %}

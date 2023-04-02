@@ -1,6 +1,7 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, abort
 from dotenv import load_dotenv
+from sampleData import sampleCourses
 
 
 def create_app(test_config=None):
@@ -19,12 +20,7 @@ def create_app(test_config=None):
     # a simple page that says hello
     @app.route("/")
     def index():
-        publicCourses = [
-            ("Example Course 1", "Example Description", "id1"),
-            ("Example Course 2", "Example Description", "id2"),
-            ("Example Course 3", "Example Description", "id3"),
-        ]
-        return render_template("home.html", courses=publicCourses)
+        return render_template("home.html", courses=sampleCourses)
 
     # app login page
     @app.route("/login")
@@ -35,5 +31,25 @@ def create_app(test_config=None):
     @app.route("/register")
     def register():
         return render_template("register.html")
+
+    # view all public courses page
+    @app.route("/courses")
+    def courses():
+        return render_template(
+            "courses.html", courses=sampleCourses, searchTerm="example search term"
+        )
+
+    # view course info page
+    @app.route("/courses/<course_id>")
+    def view_course(course_id):
+        ids = list(map(lambda c: c[3], sampleCourses))
+
+        # if id not found
+        if course_id not in ids:
+            return abort(404)
+
+        course = sampleCourses[ids.index(course_id)]
+
+        return render_template("view_course.html", course=course)
 
     return app
