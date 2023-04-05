@@ -1,7 +1,7 @@
 # Description
-E-Course management platform. Organize online courses efficiently with automatic assignment checking, student/teacher user control and self-enrolment.
+E-Course management platform. Organise online courses efficiently with automatic assignment checking, student/teacher user control and self-enrolment.
 
-This project was made for **TKT20011 Intermediate Studies Project: Database Application**-course organized by University of Helsinki in the fourth period of 2023.
+This project was made for **TKT20011 Intermediate Studies Project: Database Application**-course organised by University of Helsinki in the fourth period of 2023.
 
 ### Peer Reviewers
 
