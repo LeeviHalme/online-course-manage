@@ -1,10 +1,14 @@
 import os
-from flask import Flask, render_template, abort
+from flask import Flask
 from dotenv import load_dotenv
-from sampleData import sampleCourses
+
+# import blueprints
+from routes.main import main
+from routes.auth import auth
+from routes.courses import courses
 
 
-def create_app(test_config=None):
+def create_app():
     # load .env file
     load_dotenv()
 
@@ -17,39 +21,9 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
-    @app.route("/")
-    def index():
-        return render_template("home.html", courses=sampleCourses)
-
-    # app login page
-    @app.route("/login")
-    def login():
-        return render_template("login.html")
-
-    # app register page
-    @app.route("/register")
-    def register():
-        return render_template("register.html")
-
-    # view all public courses page
-    @app.route("/courses")
-    def courses():
-        return render_template(
-            "courses.html", courses=sampleCourses, searchTerm="example search term"
-        )
-
-    # view course info page
-    @app.route("/courses/<course_id>")
-    def view_course(course_id):
-        ids = list(map(lambda c: c[3], sampleCourses))
-
-        # if id not found
-        if course_id not in ids:
-            return abort(404)
-
-        course = sampleCourses[ids.index(course_id)]
-
-        return render_template("view_course.html", course=course)
+    # register blueprints
+    app.register_blueprint(auth)
+    app.register_blueprint(courses)
+    app.register_blueprint(main)
 
     return app
