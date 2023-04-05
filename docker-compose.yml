@@ -4,7 +4,7 @@ services:
     container_name: ocm-flask
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfiles/Flask.Dockerfile
     env_file: .env
     restart: always
     volumes:
@@ -13,7 +13,9 @@ services:
       - 5000:5000
   db:
     container_name: ocm-postgres
-    image: "postgres:14.3"
+    build:
+      context: .
+      dockerfile: Dockerfiles/Postgres.Dockerfile
     env_file: .env
     restart: always
   explorer:
