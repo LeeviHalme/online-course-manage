@@ -1,6 +1,6 @@
 {% extends "layouts/main.html" %} {% block content %} {% if searchTerm %}
 <h3 class="ms-3 mt-5">
-  Found {{courses|length}} results for query "{{searchTerm}}":
+  Found {{courses|length}} results for search query "{{searchTerm}}":
 </h3>
 {% endif %}
 <div class="album py-5 bg-body-tertiary">
@@ -32,7 +32,7 @@
                 font-weight: bold;
               "
             >
-              {{ course[0] }}
+              {{ course[1] }}
             </text>
           </svg>
           <div class="card-body">
@@ -40,13 +40,13 @@
             <div class="d-flex justify-content-between align-items-center">
               <div class="btn-group">
                 <a
-                  href="/courses/{{course[3]}}"
+                  href="/courses/{{course[0]}}"
                   class="btn btn-sm btn-outline-secondary"
                 >
                   View
                 </a>
                 <a
-                  href="/courses/{{course[3]}}/join"
+                  href="/courses/{{course[0]}}/join"
                   class="btn btn-sm btn-outline-secondary"
                 >
                   Join Course

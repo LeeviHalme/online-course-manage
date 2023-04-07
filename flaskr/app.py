@@ -21,6 +21,13 @@ def create_app():
     except OSError:
         pass
 
+    # init database here in order to
+    # access correct app context
+    from modules.db import db
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("POSTGRES_URI")
+    db.init_app(app)
+
     # register blueprints
     app.register_blueprint(auth)
     app.register_blueprint(courses)

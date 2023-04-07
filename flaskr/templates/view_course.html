@@ -4,23 +4,114 @@
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="/">Home</a></li>
       <li class="breadcrumb-item"><a href="/courses">Courses</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{course[0]}}</li>
+      <li class="breadcrumb-item active" aria-current="page">{{course[1]}}</li>
     </ol>
   </nav>
 </div>
 <div class="row">
   <div class="col-md-9">
-    <h1 class="mb-4">{{ course[0] }}</h1>
-    <p>{{ course[1] }}</p>
+    <h1 class="mb-4">{{ course[1] }}</h1>
+    <p>{{ course[3] }}</p>
+    <div class="d-flex flex-column mt-5">
+      <small class="text-secondary mb-2">
+        The responsible teachers for this course:
+      </small>
+      <small>Esimerkki Ope 1, Esimerkki Ope 2, Esimerkki Ope 3</small>
+    </div>
   </div>
   <div class="col-md-3">
-    <div class="row">
-      <b>Enroll yourself into the course:</b>
+    <div class="row mb-4">
+      <div class="col-md-12 mb-2">
+        <b>Course Contents</b>
+      </div>
+      <div class="col-md-12">
+        <ul class="list-group">
+          {% if loggedIn %}
+
+          <a href="/courses/{{course[0]}}/material" class="nav-link">
+            <li
+              class="list-group-item d-flex justify-content-between align-items-start"
+            >
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">Course Material</div>
+                View provided material
+              </div>
+            </li>
+          </a>
+          <a href="/courses/{{course[0]}}/exercises" class="nav-link">
+            <li
+              class="list-group-item d-flex justify-content-between align-items-start"
+            >
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">Exercises</div>
+                Complete exercises for points
+              </div>
+              <span class="badge bg-primary rounded-pill">14</span>
+            </li>
+          </a>
+          <a href="/courses/{{course[0]}}/summary" class="nav-link">
+            <li
+              class="list-group-item d-flex justify-content-between align-items-start"
+            >
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">Summary</div>
+                View course summary
+              </div>
+            </li>
+          </a>
+          {% else %}
+          <a
+            href="/courses/{{course[0]}}/material"
+            class="nav-link disabled opacity-25"
+          >
+            <li
+              class="list-group-item d-flex justify-content-between align-items-start"
+            >
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">Course Material</div>
+                View provided material
+              </div>
+            </li>
+          </a>
+          <a
+            href="/courses/{{course[0]}}/exercises"
+            class="nav-link disabled opacity-25"
+          >
+            <li
+              class="list-group-item d-flex justify-content-between align-items-start"
+            >
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">Exercises</div>
+                Complete exercises for points
+              </div>
+            </li>
+          </a>
+          <a
+            href="/courses/{{course[0]}}/summary"
+            class="nav-link disabled opacity-25"
+          >
+            <li
+              class="list-group-item d-flex justify-content-between align-items-start"
+            >
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">Summary</div>
+                View course summary
+              </div>
+            </li>
+          </a>
+          {% endif %}
+        </ul>
+      </div>
     </div>
     <div class="row">
-      <small class="text-secondary my-3"
-        >You need to be logged in to enroll!</small
-      >
+      <div class="col-md-12 mb-2">
+        <b>Enroll yourself into the course:</b>
+      </div>
+      <div class="col-md-12">
+        <small class="text-secondary my-3"
+          >You need to be logged in to enroll!</small
+        >
+      </div>
     </div>
   </div>
 </div>
