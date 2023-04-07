@@ -22,5 +22,10 @@ services:
     image: postgres:14.3
     env_file: .env
     restart: always
+    volumes:
+      - db-data:/var/lib/postgresql/data
     ports:
       - "8001:5432"
+
+volumes:
+  db-data:
