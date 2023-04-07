@@ -21,7 +21,7 @@ services:
     container_name: ocm-postgres
     build:
       context: .
-      dockerfile: Dockerfiles/Flask.Prod.Dockerfile
+      dockerfile: Dockerfiles/Postgres.Dockerfile
     env_file: .env
     restart: always
     volumes:
