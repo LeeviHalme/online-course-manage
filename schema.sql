@@ -39,4 +39,4 @@ CREATE TABLE participants (
 INSERT INTO users (id, name, email, type) VALUES (gen_random_uuid(), 'Teppo Testaaja', 'testi@leevihal.me', 'STUDENT');
 
 -- INSERT TEST COURSE
-INSERT INTO courses (id, name, short_description, description, invitation_code) VALUES (gen_random_uuid(), 'Esimerkkikurssi #1', 'Tämä kurssi on luotu sovelluksen testaamiseen.', 'Tämä on kurssin kuvaus. Voit kirjoittaa tähän kuvauksen kurssista.', 'abcdefg1234567');
+INSERT INTO courses (id, name, short_description, description, invitation_code, is_hidden) VALUES (gen_random_uuid(), 'Esimerkkikurssi #1', 'Tämä kurssi on luotu sovelluksen testaamiseen.', 'Tämä on kurssin kuvaus. Voit kirjoittaa tähän kuvauksen kurssista.', 'abcdefg1234567', false);
