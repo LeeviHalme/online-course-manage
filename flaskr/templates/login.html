@@ -1,25 +1,36 @@
 {% extends "layouts/main.html" %} {% block content %}
-<h1 class="text-center my-5">Welcome back, please sign-in</h1>
-<form class="col-md-6 offset-md-3">
-  <div class="mb-3">
-    <label for="emailInput" class="form-label">Email address</label>
-    <input
-      type="email"
-      class="form-control"
-      id="emailInput"
-      placeholder="name@example.com"
-      required
-    />
+<div class="col-md-12 d-flex align-items-center justify-content-center mb-4">
+  <img
+    src="/static/android-chrome-512x512.png"
+    alt="Logo"
+    height="150"
+    width="150"
+  />
+  <div class="ms-3">
+    <h1 class="mb-0">OCM</h1>
+    <small class="text-secondary">Sign into your existing account</small>
   </div>
-  <div class="mb-5">
-    <label for="passwordInput" class="form-label">Password</label>
-    <input
-      type="password"
-      class="form-control"
-      id="passwordInput"
-      placeholder="* * * * * * * *"
-      required
-    />
+</div>
+<form class="col-md-4 offset-md-4">
+  <div class="mb-3">
+    <div class="form-floating mb-3">
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        placeholder="name@example.com"
+      />
+      <label for="email">Email address</label>
+    </div>
+    <div class="form-floating">
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        placeholder="Password"
+      />
+      <label for="password">Password</label>
+    </div>
   </div>
   <div class="col-md-12 d-flex">
     <div class="col-md-6">
