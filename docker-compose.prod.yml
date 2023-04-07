@@ -4,7 +4,7 @@ services:
     container_name: ocm-flask
     build:
       context: .
-      dockerfile: Dockerfiles/Flask.Dockerfile.prod
+      dockerfile: Dockerfiles/Flask.Prod.Dockerfile
     env_file: .env
     restart: always
     ports:
@@ -19,7 +19,9 @@ services:
       - "80:80"
   db:
     container_name: ocm-postgres
-    image: postgres:14.3
+    build:
+      context: .
+      dockerfile: Dockerfiles/Flask.Prod.Dockerfile
     env_file: .env
     restart: always
     volumes:
