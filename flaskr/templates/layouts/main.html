@@ -43,7 +43,20 @@
     />
   </head>
   <body>
-    {% block alert %}{% endblock %}
+    {% if alert %}
+    <div
+      class="alert alert-{{alert[0]}} alert-dismissible fade show"
+      role="alert"
+    >
+      {{ alert[1] }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endif %}
     <nav class="py-2 bg-light border-bottom">
       <div class="container d-flex flex-wrap">
         <ul class="nav me-auto">
