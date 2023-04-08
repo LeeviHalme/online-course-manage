@@ -28,6 +28,9 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("POSTGRES_URI")
     db.init_app(app)
 
+    # setup session keys
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+
     # register blueprints
     app.register_blueprint(auth)
     app.register_blueprint(courses)

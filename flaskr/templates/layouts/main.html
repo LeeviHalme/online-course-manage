@@ -67,6 +67,26 @@
             <a href="/courses" class="nav-link link-dark px-2">Courses</a>
           </li>
         </ul>
+        {% if session.user %}
+        <div class="d-flex align-items-center">
+          <div class="dropdown text-end">
+            <a
+              href="#"
+              class="d-block link-dark text-decoration-none dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {{ session.user.email }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end text-small">
+              <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
+              <li><a class="dropdown-item" href="/profile">Profile</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="/auth/logout">Sign out</a></li>
+            </ul>
+          </div>
+        </div>
+        {% else %}
         <ul class="nav">
           <li class="nav-item">
             <a href="/auth/login" class="nav-link link-dark px-2">Login</a>
@@ -75,6 +95,7 @@
             <a href="/auth/register" class="nav-link link-dark px-2">Sign up</a>
           </li>
         </ul>
+        {% endif %}
       </div>
     </nav>
     <header class="py-3 mb-4 border-bottom">
