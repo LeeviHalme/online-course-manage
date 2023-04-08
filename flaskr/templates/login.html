@@ -11,7 +11,7 @@
     <small class="text-secondary">Sign into your existing account</small>
   </div>
 </div>
-<form class="col-md-4 offset-md-4">
+<form class="col-md-4 offset-md-4" action="/auth/login" method="post">
   <div class="mb-3">
     <div class="form-floating mb-3">
       <input
@@ -19,6 +19,7 @@
         class="form-control"
         id="email"
         placeholder="name@example.com"
+        name="email"
       />
       <label for="email">Email address</label>
     </div>
@@ -28,6 +29,7 @@
         class="form-control"
         id="password"
         placeholder="Password"
+        name="password"
       />
       <label for="password">Password</label>
     </div>
