@@ -22,11 +22,12 @@ Ticked = Completed & Live in Production
 
 - [x] Automatic CI/CD to a production DigitalOcean droplet running Ubuntu using docker-compose
 - [ ] Authentication
-  - [ ] Ability to login using username (possibly email) and password
-  - [ ] Ability to register as a teacher or as a student
+  - [x] Ability to login using username (possibly email) and password
+  - [x] Ability to register as a teacher or as a student
+    - [ ] TODO: Add validation to user input
 - [ ] Courses
   - [ ] Student-user features
-    - [ ] View all courses
+    - [x] View all courses
     - [ ] View courses you've enrolled in
     - [ ] View a specific course
       - [ ] View course material (text-based) (could implement markup support)
@@ -37,7 +38,7 @@ Ticked = Completed & Live in Production
         - [ ] View total awarded points
         - [ ] Unenroll from the course
   - [ ] Teacher-user features
-    - [ ] View all courses
+    - [x] View all courses
     - [ ] Delete a specific course
     - [ ] Add new course
     - [ ] View a specific course
