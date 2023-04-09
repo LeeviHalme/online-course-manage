@@ -1,13 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, session
 from modules.auth import try_login, get_user_by_email, create_user
+from modules.db import serialize_to_dict
 
 auth = Blueprint("auth", __name__, url_prefix="/auth")
-
-# serialize SQLAlchemy Row object into a
-# python dict
-def serialize_to_dict(row):
-    return dict(row._mapping)
-
 
 # app login page
 @auth.route("/login", methods=["GET", "POST"])

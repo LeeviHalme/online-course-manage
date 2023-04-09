@@ -23,3 +23,9 @@ def make_insert(query: str, params={}):
     db.session.commit()
 
     return query
+
+
+# helper to serialize SQLAlchemy Row object
+# into a python dict
+def serialize_to_dict(row):
+    return dict(row._mapping)
