@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from routes.main import main
 from routes.auth import auth
 from routes.courses import courses
+from routes.profile import profile
 
 
 def create_app():
@@ -32,8 +33,9 @@ def create_app():
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
     # register blueprints
+    app.register_blueprint(main)
     app.register_blueprint(auth)
     app.register_blueprint(courses)
-    app.register_blueprint(main)
+    app.register_blueprint(profile)
 
     return app

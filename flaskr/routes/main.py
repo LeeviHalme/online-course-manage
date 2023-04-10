@@ -3,7 +3,8 @@ from sampleData import sampleCourses
 
 main = Blueprint("main", __name__)
 
-# a simple page that says hello
+
+# app homepage route
 @main.route("/")
 def index():
     return render_template("home.html", courses=sampleCourses)
