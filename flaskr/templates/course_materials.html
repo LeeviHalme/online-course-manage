@@ -1,0 +1,82 @@
+{% extends "layouts/main.html" %} {% block content %} {% if materials|length > 0
+%}
+<div class="row">
+  <div class="col-md-2 offset-2">
+    <ul class="nav nav-pills mb-3 flex-column" id="pills-tab" role="tablist">
+      {% for material in materials %} {% if materials.index(material) == 0 %}
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link active"
+          data-bs-toggle="pill"
+          data-bs-target="#pills-{{materials.index(material)}}"
+          type="button"
+          role="tab"
+          aria-controls="pills-{{materials.index(material)}}"
+          aria-selected="true"
+        >
+          {{ material["name"] }}
+        </button>
+      </li>
+      {% else %}
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          data-bs-toggle="pill"
+          data-bs-target="#pills-{{materials.index(material)}}"
+          type="button"
+          role="tab"
+          aria-controls="pills-{{materials.index(material)}}"
+          aria-selected="true"
+        >
+          {{ material["name"] }}
+        </button>
+      </li>
+      {% endif %} {% endfor %}
+    </ul>
+  </div>
+  <div class="col-md-6">
+    <div class="tab-content" id="pills-tabContent">
+      {% for material in materials %} {% if materials.index(material) == 0 %}
+      <div
+        class="tab-pane fade show active markdown-preview"
+        id="pills-{{materials.index(material)}}"
+        role="tabpanel"
+        aria-labelledby="pills-tab-{{materials.index(material)}}"
+        tabindex="{{materials.index(material)}}"
+      >
+        {% else %}
+        <div
+          class="tab-pane fade markdown-preview"
+          id="pills-{{materials.index(material)}}"
+          role="tabpanel"
+          aria-labelledby="pills-tab-{{materials.index(material)}}"
+          tabindex="{{materials.index(material)}}"
+        >
+          {% endif %}
+          <p class="source-text d-none">{{ material["content"] }}</p>
+          <p class="markdown p-4 border rounded bg-light"></p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% block scripts %}
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    // parse markdown in every material
+    document.querySelectorAll(".markdown-preview").forEach(element => {
+      source = element.querySelector(".source-text");
+      target = element.querySelector(".markdown");
+
+      target.innerHTML = marked.parse(source.innerHTML);
+    });
+  </script>
+  {% endblock %} {% else %}
+  <div class="row">
+    <div class="col-md-12 text-center py-4">
+      <p class="text-secondary mb-2">No material provided for this course.</p>
+      <a href="/profile/dashboard">Back to your courses</a>
+    </div>
+  </div>
+  {% endif %} {% endblock content %}
+</div>

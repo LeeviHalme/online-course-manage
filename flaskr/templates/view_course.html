@@ -28,8 +28,8 @@
       </div>
       <div class="col-md-12">
         <ul class="list-group">
-          {% if session.user and isEnrolled %}
-          <a href="/courses/{{course[0]}}/material" class="nav-link">
+          {% if isEnrolled %}
+          <a href="/courses/{{course['id']}}/materials" class="nav-link">
             <li
               class="list-group-item d-flex justify-content-between align-items-start"
             >
@@ -39,7 +39,7 @@
               </div>
             </li>
           </a>
-          <a href="/courses/{{course[0]}}/exercises" class="nav-link">
+          <a href="/courses/{{course['id']}}/exercises" class="nav-link">
             <li
               class="list-group-item d-flex justify-content-between align-items-start"
             >
@@ -50,7 +50,7 @@
               <span class="badge bg-primary rounded-pill">14</span>
             </li>
           </a>
-          <a href="/courses/{{course[0]}}/summary" class="nav-link">
+          <a href="/courses/{{course['id']}}/summary" class="nav-link">
             <li
               class="list-group-item d-flex justify-content-between align-items-start"
             >
@@ -62,7 +62,7 @@
           </a>
           {% else %}
           <a
-            href="/courses/{{course[0]}}/material"
+            href="/courses/{{course['id']}}/materials"
             class="nav-link disabled opacity-25"
           >
             <li
@@ -75,7 +75,7 @@
             </li>
           </a>
           <a
-            href="/courses/{{course[0]}}/exercises"
+            href="/courses/{{course['id']}}/exercises"
             class="nav-link disabled opacity-25"
           >
             <li
@@ -88,7 +88,7 @@
             </li>
           </a>
           <a
-            href="/courses/{{course[0]}}/summary"
+            href="/courses/{{course['id']}}/summary"
             class="nav-link disabled opacity-25"
           >
             <li
@@ -104,6 +104,7 @@
         </ul>
       </div>
     </div>
+    {% if not isEnrolled %}
     <div class="row">
       <div class="col-md-12 mb-2">
         <b>Enroll yourself into the course:</b>
@@ -141,6 +142,7 @@
         {% endif%}
       </div>
     </div>
+    {% endif %}
   </div>
 </div>
 {% endblock content %}

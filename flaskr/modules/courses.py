@@ -1,5 +1,6 @@
 from modules.db import make_query, make_insert, serialize_to_dict
 
+
 # get all courses from db
 def get_courses(hidden=False):
     # if visible courses were requested
@@ -78,3 +79,12 @@ def enroll_to_course(course_id: str, user_id: str):
         "INSERT INTO participants (user_id, course_id) VALUES (:user_id, :course_id)"
     )
     make_insert(text_query, params)
+
+
+# get course materials from db
+def get_course_materials(course_id: str):
+    query = make_query(
+        "SELECT * FROM materials WHERE course_id = :course_id", {"course_id": course_id}
+    )
+    materials = query.fetchall()
+    return materials

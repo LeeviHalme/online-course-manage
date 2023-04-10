@@ -6,6 +6,7 @@ from modules.courses import (
     is_enrolled,
     validate_invitation_code,
     enroll_to_course,
+    get_course_materials,
 )
 from modules.db import serialize_to_dict
 
@@ -47,9 +48,21 @@ def view_course(course_id: str):
         alert = ("danger", "You've already enrolled to this course!")
     elif args.get("invalidCode"):
         alert = ("danger", "Invalid invitation code! Please double-check spelling")
+    elif args.get("success"):
+        alert = ("success", "Successfully enrolled to the course!")
+
+    isEnrolled = False
+    user = session["user"]
+    # if user is logged in
+    if user:
+        # check user enrolment status
+        isEnrolled = is_enrolled(course_id, user["id"])
 
     return render_template(
-        "view_course.html", course=serialize_to_dict(course), alert=alert
+        "view_course.html",
+        course=serialize_to_dict(course),
+        alert=alert,
+        isEnrolled=isEnrolled,
     )
 
 
@@ -88,4 +101,29 @@ def enroll(course_id: str):
     # create new participant record
     enroll_to_course(course_id, user["id"])
 
-    return redirect(f"/courses/{course_id}")
+    return redirect(f"/courses/{course_id}?success=true")
+
+
+# view course materials
+@courses.route("/<course_id>/materials", methods=["GET"])
+def view_materials(course_id: str):
+    course = find_by_id(course_id)
+
+    # if course was not found
+    if not course:
+        return abort(404)
+
+    # if user is not logged in
+    user = session["user"]
+    if not user:
+        return abort(401)
+
+    # if user isn't enrolled
+    enrolled = is_enrolled(course_id, user["id"])
+    if not enrolled:
+        return abort(403)
+
+    # get materials from db
+    materials = get_course_materials(course_id)
+
+    return render_template("course_materials.html", materials=materials)

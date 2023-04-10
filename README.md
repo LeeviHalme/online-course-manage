@@ -28,11 +28,11 @@ Ticked = Completed & Live in Production
 - [ ] Courses
   - [ ] Student-user features
     - [x] View all courses
-    - [ ] View courses you've enrolled in
+    - [x] View courses you've enrolled in
     - [ ] View a specific course
       - [ ] View course material (text-based) (could implement markup support)
       - [ ] View course assignments
-      - [ ] Enroll using invite code
+      - [x] Enroll using invite code
       - [ ] View course summary
         - [ ] View statistics
         - [ ] View total awarded points
@@ -50,7 +50,7 @@ Ticked = Completed & Live in Production
       - [ ] Change/edit assignments
       - [ ] View and reset invite code
       - [ ] Add new assignment
-      - [ ] Delete an assignment
+      - [ ] Delete an assignment 
 
 # Local Setup
 
