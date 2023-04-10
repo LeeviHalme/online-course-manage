@@ -27,6 +27,15 @@ CREATE TABLE courses (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- CREATE MATERIALS TABLE
+-- Joined table for managing course-->material relations
+CREATE TABLE materials (
+  course_id UUID NOT NULL REFERENCES courses(id),
+  name VARCHAR(25) NOT NULL,
+  content TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- CREATE PARTICIPANTS TABLE
 -- Joined table for managing user-->course relations
 CREATE TABLE participants (
@@ -36,7 +45,7 @@ CREATE TABLE participants (
 );
 
 -- INSERT TEST USER
-INSERT INTO users (id, name, email, type) VALUES (gen_random_uuid(), 'Teppo Testaaja', 'testi@leevihal.me', 'STUDENT');
+INSERT INTO users (id, name, email, type, password_hash) VALUES (gen_random_uuid(), 'Teppo Testaaja', 'testi@leevihal.me', 'STUDENT', 'pbkdf2:sha256:260000$Wj1Grv19zhSiZBO8$e936e501611b73a1fff0e12d2b3910b251654e90f44e33320749be14319f63ac');
 
 -- INSERT TEST COURSE
 INSERT INTO courses (id, name, short_description, description, invitation_code, is_hidden) VALUES (gen_random_uuid(), 'Esimerkkikurssi #1', 'Tämä kurssi on luotu sovelluksen testaamiseen.', 'Tämä on kurssin kuvaus. Voit kirjoittaa tähän kuvauksen kurssista.', 'abcdefg1234567', false);
