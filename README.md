@@ -30,7 +30,7 @@ Ticked = Completed & Live in Production
     - [x] View all courses
     - [x] View courses you've enrolled in
     - [ ] View a specific course
-      - [ ] View course material (text-based) (could implement markup support)
+      - [x] View course material (text-based) (could implement markup support)
       - [ ] View course assignments
       - [x] Enroll using invite code
       - [ ] View course summary
