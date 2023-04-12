@@ -52,7 +52,7 @@ def view_course(course_id: str):
         alert = ("success", "Successfully enrolled to the course!")
 
     isEnrolled = False
-    user = session["user"]
+    user = session.get("user")
     # if user is logged in
     if user:
         # check user enrolment status
@@ -70,7 +70,7 @@ def view_course(course_id: str):
 @courses.route("/<course_id>/join", methods=["POST"])
 def enroll(course_id: str):
     # if user is not logged in
-    user = session["user"]
+    user = session.get("user")
     if not user:
         return abort(401)
 
@@ -114,7 +114,7 @@ def view_materials(course_id: str):
         return abort(404)
 
     # if user is not logged in
-    user = session["user"]
+    user = session.get("user")
     if not user:
         return abort(401)
 

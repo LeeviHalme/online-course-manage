@@ -18,9 +18,8 @@ def context_processor():
 # dashboard route
 @profile.route("/dashboard", methods=["GET"])
 def dashboard():
-    user = session["user"]
-
     # if user is not logged in
+    user = session.get("user")
     if not user:
         return abort(401)
 
