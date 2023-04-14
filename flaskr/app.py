@@ -8,6 +8,9 @@ from routes.auth import auth
 from routes.courses import courses
 from routes.profile import profile
 
+# import error handlers
+from modules.error_handlers import not_found, unauthorized, forbidden
+
 
 def create_app():
     # load .env file
@@ -37,5 +40,10 @@ def create_app():
     app.register_blueprint(auth)
     app.register_blueprint(courses)
     app.register_blueprint(profile)
+
+    # register error handlers
+    app.register_error_handler(404, not_found)
+    app.register_error_handler(401, unauthorized)
+    app.register_error_handler(403, forbidden)
 
     return app
