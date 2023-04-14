@@ -79,3 +79,7 @@ docker-compose up --build
 ```shell
 docker-compose -f docker-compose.prod.yml up -d --build
 ```
+
+# License
+
+MIT <3
