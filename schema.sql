@@ -44,6 +44,33 @@ CREATE TABLE participants (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- CREATE COMPLETION TYPES
+CREATE TYPE grade_type AS ENUM ('L', 'E', 'M', 'C', 'B', 'A');
+
+-- CREATE COMPLETIONS TABLE
+-- Joined table for managing user-->course completion relations
+CREATE TABLE completions (
+  user_id UUID NOT NULL REFERENCES users(id),
+  course_id UUID NOT NULL REFERENCES courses(id),
+  grade grade_type,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CREATE EXERCISE QUESTIONS TABLE
+CREATE TABLE exercise_questions (
+  id UUID NOT NULL PRIMARY KEY,
+  course_id UUID NOT NULL REFERENCES courses(id),
+  question TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CREATE EXERCISE ANSWERS TABLE
+CREATE TABLE exercise_answers (
+  question_id UUID NOT NULL REFERENCES exercise_questions(id),
+  answer TEXT NOT NULL,
+  correct BOOLEAN NOT NULL,
+);
+
 -- INSERT TEST USER
 INSERT INTO users (id, name, email, type, password_hash) VALUES (gen_random_uuid(), 'Teppo Testaaja', 'testi@leevihal.me', 'STUDENT', 'pbkdf2:sha256:260000$Wj1Grv19zhSiZBO8$e936e501611b73a1fff0e12d2b3910b251654e90f44e33320749be14319f63ac');
 
