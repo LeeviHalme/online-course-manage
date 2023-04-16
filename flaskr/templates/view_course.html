@@ -35,7 +35,7 @@
       </div>
       <div class="col-md-12">
         <ul class="list-group">
-          {% if isEnrolled %}
+          {% if user_enrolled %}
           <a href="/courses/{{course['id']}}/materials" class="nav-link">
             <li
               class="list-group-item d-flex justify-content-between align-items-start"
@@ -54,7 +54,9 @@
                 <div class="fw-bold">Exercises</div>
                 Complete exercises for points
               </div>
-              <span class="badge bg-primary rounded-pill">14</span>
+              <span class="badge bg-primary rounded-pill"
+                >{{exercise_count}}</span
+              >
             </li>
           </a>
           <a href="/courses/{{course['id']}}/summary" class="nav-link">
@@ -111,7 +113,7 @@
         </ul>
       </div>
     </div>
-    {% if not isEnrolled %}
+    {% if not user_enrolled %}
     <div class="row">
       <div class="col-md-12 mb-2">
         <b>Enroll yourself into the course:</b>

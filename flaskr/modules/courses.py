@@ -27,7 +27,8 @@ def search_courses_by_name(name: str):
 # find singular course by id
 def find_by_id(course_id: str):
     query = make_query(
-        "SELECT * FROM courses WHERE id = :course_id", {"course_id": course_id}
+        "SELECT id, name, short_description, description, is_public, is_hidden FROM courses WHERE id = :course_id",
+        {"course_id": course_id},
     )
     return query.fetchone()
 
@@ -88,6 +89,16 @@ def get_course_materials(course_id: str):
     )
     materials = query.fetchall()
     return materials
+
+
+# get course exercise count
+def get_course_exercise_count(course_id: str) -> int:
+    query = make_query(
+        "SELECT COUNT(*) FROM exercise_questions WHERE course_id = :course_id",
+        {"course_id": course_id},
+    )
+    result = query.fetchone()
+    return result[0]
 
 
 # get joined exercises questions and answers from db

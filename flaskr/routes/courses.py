@@ -8,6 +8,7 @@ from modules.courses import (
     enroll_to_course,
     get_course_materials,
     get_course_exercises,
+    get_course_exercise_count,
 )
 from modules.db import serialize_to_dict
 
@@ -52,18 +53,24 @@ def view_course(course_id: str):
     elif args.get("success"):
         alert = ("success", "Successfully enrolled to the course!")
 
-    isEnrolled = False
+    user_enrolled = False
+    exercise_count = None
     user = session.get("user")
     # if user is logged in
     if user:
         # check user enrolment status
-        isEnrolled = is_enrolled(course_id, user["id"])
+        user_enrolled = is_enrolled(course_id, user["id"])
+
+        # if user is enrolled, fetch exercise count
+        if user_enrolled:
+            exercise_count = get_course_exercise_count(course_id)
 
     return render_template(
         "view_course.html",
         course=serialize_to_dict(course),
         alert=alert,
-        isEnrolled=isEnrolled,
+        user_enrolled=user_enrolled,
+        exercise_count=exercise_count,
     )
 
 
