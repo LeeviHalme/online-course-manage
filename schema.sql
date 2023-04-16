@@ -56,23 +56,62 @@ CREATE TABLE completions (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- CREATE EXERCISE TYPES
+CREATE TYPE exercise_type AS ENUM ('MULTICHOISE', 'OPEN');
+
 -- CREATE EXERCISE QUESTIONS TABLE
 CREATE TABLE exercise_questions (
   id UUID NOT NULL PRIMARY KEY,
   course_id UUID NOT NULL REFERENCES courses(id),
   question TEXT NOT NULL,
+  points INTEGER NOT NULL,
+  type exercise_type,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- CREATE EXERCISE ANSWERS TABLE
+-- Only used for questions which have type MULTICHOISE
 CREATE TABLE exercise_answers (
+  id UUID NOT NULL PRIMARY KEY, 
   question_id UUID NOT NULL REFERENCES exercise_questions(id),
   answer TEXT NOT NULL,
-  correct BOOLEAN NOT NULL,
+  correct BOOLEAN NOT NULL
+);
+
+-- CREATE SUBMISSIONS TABLE
+CREATE TABLE submissions (
+  question_id UUID NOT NULL REFERENCES exercise_questions(id),
+  user_id UUID NOT NULL REFERENCES users(id),
+  answer_id UUID REFERENCES exercise_answers(id),
+  open_answer TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- INSERT TEST USER
-INSERT INTO users (id, name, email, type, password_hash) VALUES (gen_random_uuid(), 'Teppo Testaaja', 'testi@leevihal.me', 'STUDENT', 'pbkdf2:sha256:260000$Wj1Grv19zhSiZBO8$e936e501611b73a1fff0e12d2b3910b251654e90f44e33320749be14319f63ac');
+INSERT INTO users (id, name, email, type, password_hash)
+VALUES (
+  gen_random_uuid(),
+  'Teppo Testaaja',
+  'student@ocm.demo',
+  'STUDENT',
+  'pbkdf2:sha256:260000$Wj1Grv19zhSiZBO8$e936e501611b73a1fff0e12d2b3910b251654e90f44e33320749be14319f63ac'
+);
+INSERT INTO users (id, name, email, type, password_hash)
+VALUES (
+  gen_random_uuid(),
+  'Teppo Testaaja',
+  'teacher@ocm.demo',
+  'TEACHER',
+  'pbkdf2:sha256:260000$Wj1Grv19zhSiZBO8$e936e501611b73a1fff0e12d2b3910b251654e90f44e33320749be14319f63ac'
+);
 
 -- INSERT TEST COURSE
-INSERT INTO courses (id, name, short_description, description, invitation_code, is_hidden) VALUES (gen_random_uuid(), 'Esimerkkikurssi #1', 'Tämä kurssi on luotu sovelluksen testaamiseen.', 'Tämä on kurssin kuvaus. Voit kirjoittaa tähän kuvauksen kurssista.', 'abcdefg1234567', false);
+INSERT INTO courses (id, name, short_description, description, invitation_code, is_hidden)
+VALUES (
+  gen_random_uuid(),
+  'Esimerkkikurssi #1',
+  'Tämä kurssi on luotu sovelluksen testaamiseen.',
+  'Tämä on kurssin kuvaus. Voit kirjoittaa tähän kuvauksen kurssista. **Esimerkkiotsikko:** Kurssikuvauksessa toimii myös *markdown* ja voit _muotoilla_ tekstiä vapaavalintaisesti.',
+  'abcdefg1234567',
+  false
+);

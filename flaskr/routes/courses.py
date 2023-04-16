@@ -7,6 +7,7 @@ from modules.courses import (
     validate_invitation_code,
     enroll_to_course,
     get_course_materials,
+    get_course_exercises,
 )
 from modules.db import serialize_to_dict
 
@@ -127,3 +128,28 @@ def view_materials(course_id: str):
     materials = get_course_materials(course_id)
 
     return render_template("course_materials.html", materials=materials)
+
+
+# view course exercises
+@courses.route("/<course_id>/exercises", methods=["GET"])
+def view_exercises(course_id: str):
+    course = find_by_id(course_id)
+
+    # if course was not found
+    if not course:
+        return abort(404)
+
+    # if user is not logged in
+    user = session.get("user")
+    if not user:
+        return abort(401)
+
+    # if user isn't enrolled
+    enrolled = is_enrolled(course_id, user["id"])
+    if not enrolled:
+        return abort(403)
+
+    # get exercises from db
+    exercises = get_course_exercises(course_id)
+
+    return render_template("course_exercises.html", exercises=exercises)

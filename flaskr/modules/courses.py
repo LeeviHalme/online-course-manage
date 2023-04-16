@@ -88,3 +88,32 @@ def get_course_materials(course_id: str):
     )
     materials = query.fetchall()
     return materials
+
+
+# get joined exercises questions and answers from db
+# TODO: Improve this function's performance
+def get_course_exercises(course_id: str):
+    query = make_query(
+        "SELECT id, question, points, type FROM exercise_questions WHERE course_id = :course_id",
+        {"course_id": course_id},
+    )
+    exercises = query.fetchall()
+    to_return = []
+
+    # complete exercises with additional info
+    for e in exercises:
+        # extra casting to dict required here
+        exercise = serialize_to_dict(e)
+
+        # if exercise is multichoise, fetch answers
+        if exercise.get("type") == "MULTICHOISE":
+            query = make_query(
+                "SELECT id, answer type FROM exercise_answers WHERE question_id = :question_id",
+                {"question_id": exercise.get("id")},
+            )
+            exercise["answers"] = query.fetchall()
+
+        # push modified exercise to return array
+        to_return.append(exercise)
+
+    return to_return
