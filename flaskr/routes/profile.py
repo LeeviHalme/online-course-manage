@@ -23,12 +23,22 @@ def dashboard():
     if not user:
         return abort(401)
 
-    # show correct dashboard
-    # depending on user type
-    if user["type"] == "STUDENT":
-        # get courses user participates
-        courses = get_enrolled_courses(user["id"])
+    # get courses user participates
+    courses = get_enrolled_courses(user["id"])
 
-        return render_template("student_dashboard.html", courses=courses)
-    elif user["type"] == "TEACHER":
-        return render_template("teacher_dashboard.html")
+    return render_template("dashboard.html", courses=courses)
+
+
+# create course route
+@profile.route("/dashboard/create-course", methods=["GET", "POST"])
+def create_course():
+    # if user is not logged in
+    user = session.get("user")
+    if not user:
+        return abort(401)
+
+    # if user is not a teacher
+    if user["type"] != "TEACHER":
+        return abort(403)
+
+    return render_template("teacher/create_course.html")

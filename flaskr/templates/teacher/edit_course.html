@@ -1,0 +1,205 @@
+{% extends "layouts/main.html" %} {% block content %}
+<div class="row">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item text-capitalize" aria-current="page">
+        <a href="/profile/dashboard">
+          {{session.user.type[0:1]}}<span class="text-lowercase"
+            >{{session.user.type[1:]}}</span
+          >
+          Dashboard
+        </a>
+      </li>
+      <li class="breadcrumb-item active">Edit Course</li>
+      <li class="breadcrumb-item active">{{course.name}}</li>
+    </ol>
+  </nav>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <form action="/profile/update-course" method="post">
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control"
+          id="courseName"
+          value="{{course.name}}"
+        />
+        <label for="courseName">Course Name</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control"
+          id="shortDescription"
+          value="{{course.short_description}}"
+        />
+        <label for="shortDescription">Short Description (120 characters)</label>
+      </div>
+      <div class="form-floating mb-3">
+        <textarea
+          class="form-control"
+          id="courseDescription"
+          style="height: 200px"
+        >
+{{course.description}}</textarea
+        >
+        <label for="courseDescription">Description (supports markdown)</label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          value="{{course.is_hidden}}"
+          id="isHidden"
+        />
+        <label class="form-check-label" for="isHidden">
+          Show course on the public courses page
+        </label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          value="{{course.is_public}}"
+          id="isPublic"
+        />
+        <label class="form-check-label" for="isPublic">
+          Allow public joining (disables invitation code)
+        </label>
+      </div>
+      <button class="btn btn-primary mt-3" type="submit">Save changes</button>
+    </form>
+  </div>
+  <div class="col-md-6">
+    <small class="text-secondary"
+      >Invitation Code
+      <style>
+        .custom-popup {
+          --bs-tooltip-max-width: 350px;
+        }
+      </style>
+      <i
+        class="fas fa-question-circle"
+        data-bs-custom-class="custom-popup"
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        data-bs-title="Changing the invitation code doesn't remove students which have joined with the old code. To remove students from the course, use the participant manager below."
+      ></i
+    ></small>
+    <div class="d-flex mb-3">
+      <div class="w-100">
+        <input
+          type="text"
+          class="form-control"
+          value="{{invitation_code}}"
+          id="invitationCode"
+        />
+      </div>
+      <div class="ms-3 flex-shrink-0">
+        <button
+          class="btn btn-warning"
+          id="randomInvite"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          data-bs-title="Generate random invitation code"
+        >
+          <i class="fas fa-sync text-white"></i>
+        </button>
+        <button class="btn btn-primary">Update</button>
+      </div>
+    </div>
+    {% if participants|length > 0 %}
+    <table
+      id="courseParticipants"
+      class="table table-striped caption-top"
+      style="width: 100%"
+    >
+      <caption class="text-secondary">
+        Manage participants
+      </caption>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Type</th>
+          <th>Controls</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in participants %}
+        <tr>
+          <td class="text-center align-middle">
+            <img
+              src="https://api.dicebear.com/6.x/initials/png?seed={{user.name}}"
+              alt="User's Avatar"
+              class="rounded-circle"
+              style="height: 25px; width: 25px"
+            />
+          </td>
+          <td class="align-middle">
+            {{user.name}} {% if user.id == session.user.id %}
+            <b class="text-primary"> (You)</b>
+            {% endif %}
+          </td>
+          <td class="align-middle">{{user.email}}</td>
+          {% if user.type == "TEACHER" %}
+          <td class="text-primary align-middle">Teacher</td>
+          {% elif user.type == "STUDENT" %}
+          <td class="text-secondary align-middle">Student</td>
+          {% endif %}
+          <td class="align-middle">
+            <button
+              class="btn btn-danger"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              data-bs-custom-class="custom-popup"
+              data-bs-title="Remove user from the course (they can still join if they know the invitation code)"
+            >
+              <i class="fas fa-times"></i> Remove
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="text-secondary text-center mt-5">No participants yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<link
+  rel="stylesheet"
+  href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"
+/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script>
+  $(document).ready(function () {
+    const random = length => {
+      let result = "";
+      const characters =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      let counter = 0;
+      while (counter < length) {
+        result += characters.charAt(
+          Math.floor(Math.random() * characters.length)
+        );
+        counter += 1;
+      }
+      return result;
+    };
+    const tooltipTriggerList = document.querySelectorAll(
+      '[data-bs-toggle="tooltip"]'
+    );
+    const tooltipList = [...tooltipTriggerList].map(
+      tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl)
+    );
+    $("#courseParticipants").DataTable();
+    $("#randomInvite").click(() => $("#invitationCode").val(random(15)));
+  });
+</script>
+{% endblock %}

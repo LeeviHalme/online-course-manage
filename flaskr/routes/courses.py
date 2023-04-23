@@ -9,6 +9,8 @@ from modules.courses import (
     get_course_materials,
     get_course_exercises,
     get_course_exercise_count,
+    get_course_participants,
+    get_course_invitation_code,
 )
 from modules.db import serialize_to_dict
 
@@ -160,3 +162,41 @@ def view_exercises(course_id: str):
     exercises = get_course_exercises(course_id)
 
     return render_template("course_exercises.html", exercises=exercises)
+
+
+# edit course info route
+@courses.route("/<course_id>/edit", methods=["GET"])
+def edit_course(course_id: str):
+    course = find_by_id(course_id)
+
+    # if course was not found
+    if not course:
+        return abort(404)
+
+    # if user is not logged in
+    user = session.get("user")
+    if not user:
+        return abort(401)
+
+    # if user is not a teacher
+    if user["type"] != "TEACHER":
+        return abort(403)
+
+    # if teacher isn't responsible for this course
+    enrolled = is_enrolled(course_id, user["id"])
+    if not enrolled:
+        return abort(403)
+
+    # get course participants
+    participants = get_course_participants(course_id)
+
+    # get course invitation code
+    # (not exposed in find_by_id() by default)
+    invitation_code = get_course_invitation_code(course_id)
+
+    return render_template(
+        "teacher/edit_course.html",
+        course=course,
+        participants=participants,
+        invitation_code=invitation_code,
+    )

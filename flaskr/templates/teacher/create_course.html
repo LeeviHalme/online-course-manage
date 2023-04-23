@@ -1,0 +1,155 @@
+{% extends "layouts/main.html" %} {% block content %}
+<div class="overflow-y-auto overflow-x-hidden" style="height: 80vh">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item text-capitalize" aria-current="page">
+            <a href="/profile/dashboard">
+              {{session.user.type[0:1]}}<span class="text-lowercase"
+                >{{session.user.type[1:]}}</span
+              >
+              Dashboard
+            </a>
+          </li>
+          <li class="breadcrumb-item active">Create Course</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <h2 class="mb-3">Create new course</h2>
+      <form action="/profile/dashboard/create-course" method="post">
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="courseName"
+            placeholder="Type a desired course name here"
+            maxlength="120"
+            minlength="3"
+            name="name"
+          />
+          <label for="courseName">Course Name</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="shortDescription"
+            placeholder="Simplified course description here"
+            name="short_description"
+          />
+          <label for="shortDescription"
+            >Short Description (120 characters)</label
+          >
+        </div>
+        <div class="form-floating mb-1">
+          <textarea
+            class="form-control"
+            id="courseDescription"
+            style="height: 200px"
+            placeholder="Longer course description here"
+            name="description"
+          ></textarea>
+          <label for="courseDescription">Description (supports markdown)</label>
+        </div>
+        <small class="text-secondary"
+          >Markdown styling guide can be found
+          <a
+            href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax"
+            >here (github.com)</a
+          >. Note that only the general markdown features are supported.</small
+        >
+        <div class="d-flex align-items-center my-3">
+          <div class="form-floating flex-grow-1">
+            <input
+              type="text"
+              class="form-control"
+              id="invitationCode"
+              placeholder="Course invitation code"
+              name="invitation_code"
+            />
+            <label for="invitationCode">Invitation Code</label>
+          </div>
+          <div class="ms-3 flex-shrink-0">
+            <button
+              class="btn btn-warning text-white"
+              id="randomInvite"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              data-bs-title="Generate random invitation code"
+              type="button"
+            >
+              <i class="fas fa-sync me-1"></i> Generate random code
+            </button>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="courseTeachers" class="form-label"
+            >Enter course teachers. Enter each teacher's email address and press
+            enter.</label
+          >
+          <select
+            class="form-select"
+            id="courseTeachers"
+            name="course_teachers[]"
+            data-allow-new="true"
+            multiple
+          >
+            <option disabled hidden value="">Please input an email</option>
+            <option selected value="{{session.user.email}}">
+              {{session.user.email}}
+            </option>
+          </select>
+          <div class="invalid-feedback">Please input a valid email.</div>
+        </div>
+        <small class="text-secondary"
+          >Visibility and accessibility settings</small
+        >
+        <div class="form-check mt-1">
+          <input class="form-check-input" type="checkbox" id="isHidden" />
+          <label class="form-check-label" for="isHidden">
+            Show course on the public courses page
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="isPublic" />
+          <label class="form-check-label" for="isPublic">
+            Allow public joining (disables invitation code)
+          </label>
+        </div>
+        <button class="btn btn-primary mt-3" type="submit">
+          Create course
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+    const random = length => {
+      let result = "";
+      const characters =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      let counter = 0;
+      while (counter < length) {
+        result += characters.charAt(
+          Math.floor(Math.random() * characters.length)
+        );
+        counter += 1;
+      }
+      return result;
+    };
+    $("#randomInvite").click(() => $("#invitationCode").val(random(15)));
+  });
+</script>
+<script type="module">
+  import Tags from "https://cdn.jsdelivr.net/gh/lekoala/bootstrap5-tags@master/tags.js";
+  Tags.init("select");
+</script>
+{% endblock %}

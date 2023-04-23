@@ -52,7 +52,11 @@ def is_enrolled(course_id: str, user_id: str):
 # validate invitation code
 # returns boolean status flag
 def validate_invitation_code(course_id: str, code: str):
-    result = find_by_id(course_id)
+    query = make_query(
+        "SELECT invitation_code FROM courses WHERE id = :course_id",
+        {"course_id": course_id},
+    )
+    result = query.fetchone()
 
     # if course_id was invalid
     if not result:
@@ -128,3 +132,21 @@ def get_course_exercises(course_id: str):
         to_return.append(exercise)
 
     return to_return
+
+
+# get course participants
+def get_course_participants(course_id: str):
+    query = make_query(
+        "SELECT U.id, U.name, U.email, U.type FROM users U LEFT JOIN participants P ON U.id = P.user_id GROUP BY U.id, P.course_id HAVING P.course_id = :course_id",
+        {"course_id": course_id},
+    )
+    return query.fetchall()
+
+
+# get course invitation code
+def get_course_invitation_code(course_id: str):
+    query = make_query(
+        "SELECT invitation_code FROM courses WHERE id = :course_id",
+        {"course_id": course_id},
+    )
+    return query.fetchone()[0] or None
