@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, request, redirect, session
+from flask import Blueprint, render_template, request, redirect, session, flash
 from modules.auth import try_login, get_user_by_email, create_user
 from modules.db import serialize_to_dict
 
 auth = Blueprint("auth", __name__, url_prefix="/auth")
+
 
 # app login page
 @auth.route("/login", methods=["GET", "POST"])
@@ -19,9 +20,8 @@ def login():
 
     # if email or password were wrong
     if not success:
-        return render_template(
-            "login.html", alert=("danger", "Invalid E-mail Address or Password")
-        )
+        flash("Invalid E-mail Address or Password", "danger")
+        return redirect(request.url)
 
     # Add session
     user = get_user_by_email(email)
@@ -45,20 +45,16 @@ def register():
 
     # check if passwords won't match
     if password != passwordConfirm:
-        return render_template(
-            "register.html",
-            alert=("danger", "Passwords won't match!"),
-        )
+        flash("Passwords won't match!", "danger")
+        return redirect(request.url)
 
     # TODO: Add validation
 
     # check if user already exists
     user = get_user_by_email(email)
     if user:
-        return render_template(
-            "register.html",
-            alert=("danger", "User with this E-mail Address already exists!"),
-        )
+        flash("User with this E-mail Address already exists!", "danger")
+        return redirect(request.url)
 
     # create new user
     create_user(name, email, password, userType)
@@ -74,4 +70,5 @@ def register():
 @auth.route("/logout", methods=["GET"])
 def logout():
     del session["user"]
+    flash("Successfully logged out!", "success")
     return redirect("/")

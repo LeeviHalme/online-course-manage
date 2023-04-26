@@ -51,12 +51,13 @@
     />
   </head>
   <body>
-    {% if alert %}
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
     <div
-      class="alert alert-{{alert[0]}} alert-dismissible fade show"
+      class="alert alert-{{category}} alert-dismissible fade show"
       role="alert"
     >
-      {{ alert[1] }}
+      {{ message }}
       <button
         type="button"
         class="btn-close"
@@ -64,7 +65,7 @@
         aria-label="Close"
       ></button>
     </div>
-    {% endif %}
+    {% endfor %} {% endif %} {% endwith %}
     <nav class="py-2 bg-light border-bottom">
       <div class="container d-flex flex-wrap">
         <ul class="nav me-auto">

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort, request, redirect, session
+from flask import Blueprint, render_template, abort, request, redirect, session, flash
 from modules.courses import (
     get_courses,
     search_courses_by_name,
@@ -45,16 +45,6 @@ def view_course(course_id: str):
     if not course:
         return abort(404)
 
-    # check additional state passed
-    args = request.args.to_dict()
-    alert = None
-    if args.get("alreadyEnrolled"):
-        alert = ("danger", "You've already enrolled to this course!")
-    elif args.get("invalidCode"):
-        alert = ("danger", "Invalid invitation code! Please double-check spelling")
-    elif args.get("success"):
-        alert = ("success", "Successfully enrolled to the course!")
-
     user_enrolled = False
     exercise_count = None
     user = session.get("user")
@@ -70,7 +60,6 @@ def view_course(course_id: str):
     return render_template(
         "view_course.html",
         course=serialize_to_dict(course),
-        alert=alert,
         user_enrolled=user_enrolled,
         exercise_count=exercise_count,
     )
@@ -100,18 +89,23 @@ def enroll(course_id: str):
 
     # if user is already enrolled
     if enrolled:
-        return redirect(f"/courses/{course_id}?alreadyEnrolled=true")
+        flash("You've already enrolled to this course!", "danger")
+        return redirect(request.url)
 
     valid = validate_invitation_code(course_id, code)
 
     # if invite code was not valid
     if not valid:
-        return redirect(f"/courses/{course_id}?invalidCode=true")
+        flash("Invalid invitation code! Please double-check spelling", "danger")
+        return redirect(request.url)
 
     # create new participant record
     enroll_to_course(course_id, user["id"])
 
-    return redirect(f"/courses/{course_id}?success=true")
+    # show success message
+    flash("Successfully enrolled to the course!", "success")
+
+    return redirect(request.url)
 
 
 # view course materials
