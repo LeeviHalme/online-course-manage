@@ -21,10 +21,10 @@ This bullet-point list fill list out all features for this application and is ke
 Ticked = Completed & Live in Production
 
 - [x] Automatic CI/CD to a production DigitalOcean droplet running Ubuntu using docker-compose
-- [ ] Authentication
+- [x] Authentication
   - [x] Ability to login using username (possibly email) and password
   - [x] Ability to register as a teacher or as a student
-    - [ ] TODO: Add validation to user input
+    - [x] Add validation to user input
 - [ ] Courses
   - [ ] Student-user features
     - [x] View all courses

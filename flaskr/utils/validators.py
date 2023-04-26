@@ -24,9 +24,9 @@ def alpha(input: str) -> bool:
     return input.isalpha()
 
 
-# Validate password (alphanumeric and >= 5 characters)
+# Validate password (>= 5 characters)
 def password(input: str) -> bool:
-    return alpha(input) and len(input) >= 5
+    return len(input) >= 5
 
 
 # Validate SQL USER_TYPE
