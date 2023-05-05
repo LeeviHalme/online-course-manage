@@ -4,6 +4,7 @@ from os import getenv
 
 db = SQLAlchemy()
 
+
 # helper to make text-based queries using SQLAlchemy
 # returns the query object
 def make_query(query: str, params={}):
@@ -19,10 +20,10 @@ def make_insert(query: str, params={}):
     if getenv("FLASK_DEBUG"):
         print(query, "-", params)
 
-    query = db.session.execute(text(query), params)
+    cursor_result = db.session.execute(text(query), params)
     db.session.commit()
 
-    return query
+    return cursor_result
 
 
 # helper to serialize SQLAlchemy Row object

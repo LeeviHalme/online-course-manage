@@ -1,4 +1,5 @@
 from modules.db import make_query, make_insert, serialize_to_dict
+from modules.auth import get_user_by_email
 
 
 # get all courses from db
@@ -150,3 +151,82 @@ def get_course_invitation_code(course_id: str):
         {"course_id": course_id},
     )
     return query.fetchone()[0] or None
+
+
+# create a new course
+def create_course(
+    name: str,
+    short_description: str,
+    description: str,
+    invitation_code: str,
+    is_hidden: bool,
+    is_public: bool,
+    course_teachers: list,
+):
+    # insert user into database
+    params = {
+        "name": name,
+        "short_description": short_description,
+        "description": description,
+        "invitation_code": invitation_code,
+        "is_hidden": bool(is_hidden),
+        "is_public": bool(is_public),
+    }
+    text_query = """
+    INSERT INTO courses (
+        id,
+        name,
+        short_description,
+        description,
+        invitation_code,
+        is_hidden,
+        is_public
+    )
+    VALUES (gen_random_uuid(), :name, :short_description, :description, :invitation_code, :is_hidden, :is_public)
+    RETURNING courses.id 
+    """
+    result = make_insert(text_query, params)
+    returned_values = result.mappings().first()
+    inserted_id = returned_values.get("id")
+
+    # create participant records for teachers
+    for email in course_teachers:
+        user = get_user_by_email(email)
+        enroll_to_course(inserted_id, user[0])
+
+
+# update existing course
+def update_course(
+    course_id: str,
+    name: str,
+    short_description: str,
+    description: str,
+    invitation_code: str,
+    is_hidden: bool,
+    is_public: bool,
+):
+    # insert user into database
+    params = {
+        "course_id": course_id,
+        "name": name,
+        "short_desc": short_description,
+        "desc": description,
+        "code": invitation_code,
+        "is_hidden": bool(is_hidden),
+        "is_public": bool(is_public),
+    }
+    text_query = """
+    UPDATE
+      courses
+    SET
+      name = :name,
+      short_description = :short_desc,
+      description = :desc,
+      invitation_code = :code,
+      is_hidden = :is_hidden,
+      is_public = :is_public
+    WHERE
+      id = :course_id
+    """
+
+    make_insert(text_query, params)

@@ -1,4 +1,5 @@
 from modules.db import make_query
+import utils.validators as validate
 
 
 # get user enrolled courses
@@ -10,3 +11,26 @@ def get_enrolled_courses(user_id: str):
     courses = result.fetchall()
 
     return courses
+
+
+# validates a list of email addresses
+# checks that they exist and have correct type
+def validate_email_list(type: str, emails: list) -> bool:
+    # validate type
+    if not validate.user_type(type):
+        return False
+
+    # store success flag
+    success = True
+
+    # loop through array
+    for email in emails:
+        args = {"email": email, "type": type}
+        query = "SELECT id FROM users WHERE email = :email AND type = :type"
+        result = make_query(query, args)
+        user = result.fetchone()
+
+        if not user:
+            success = False
+
+    return success

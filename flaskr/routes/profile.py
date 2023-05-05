@@ -1,6 +1,12 @@
 from flask import Blueprint, render_template, abort, redirect, session, request, flash
 from modules.profile import get_enrolled_courses, validate_email_list
-from modules.courses import create_course
+from modules.courses import (
+    create_course,
+    update_course,
+    find_by_id,
+    is_enrolled,
+    get_course_invitation_code,
+)
 from datetime import datetime
 import utils.validators as validate
 
@@ -53,7 +59,7 @@ def create_course_route():
     short_description = values.get("short_description")
     description = values.get("description")
     invitation_code = values.get("invitation_code")
-    course_teachers = values.get("course_teachers[]")
+    course_teachers = values.getlist("course_teachers[]")
     is_hidden = values.get("is_hidden")
     is_public = values.get("is_public")
 
@@ -73,7 +79,7 @@ def create_course_route():
         return redirect(request.url)
 
     # validate invitation code (alphanumeric, max 15 chars)
-    elif not validate.alpha(invitation_code) or len(invitation_code) > 15:
+    elif not invitation_code.isalnum() or len(invitation_code) > 15:
         flash("Invalid invitation code! Max 15 characters (a-Z, 0-9)", "danger")
         return redirect(request.url)
 
@@ -88,8 +94,7 @@ def create_course_route():
         return redirect(request.url)
 
     # validate teachers email array
-    teacher_list = course_teachers.split(",")
-    valid = validate_email_list("TEACHER", teacher_list)
+    valid = validate_email_list("TEACHER", course_teachers)
 
     # if email list was not valid
     if not valid:
@@ -101,10 +106,146 @@ def create_course_route():
 
     # create new course
     create_course(
-        name, short_description, description, invitation_code, is_hidden, is_public
+        name,
+        short_description,
+        description,
+        invitation_code,
+        is_hidden,
+        is_public,
+        course_teachers,
     )
 
     # show success msg
     flash("Successfully created new course!", "success")
 
     return redirect("/profile/dashboard")
+
+
+# edit course route
+@profile.route("/dashboard/edit-course", methods=["POST"])
+def edit_course():
+    # if user is not logged in
+    user = session.get("user")
+    if not user:
+        return abort(401)
+
+    # if user is not a teacher
+    if user["type"] != "TEACHER":
+        return abort(403)
+
+    # get request body
+    values = request.form
+    course_id = values.get("course_id")
+
+    name = values.get("name")
+    short_description = values.get("short_description")
+    description = values.get("description")
+    is_hidden = values.get("is_hidden")
+    is_public = values.get("is_public")
+
+    course = find_by_id(course_id)
+
+    # if course was not found
+    if not course:
+        return abort(404)
+
+    # if teacher isn't responsible for this course
+    enrolled = is_enrolled(course_id, user["id"])
+    if not enrolled:
+        return abort(403)
+
+    # validate name (5-120 chars)
+    if len(name) < 5 or len(name) > 120:
+        flash("Invalid name! Must be between 5-120 chars", "danger")
+        return redirect(request.url)
+
+    # validate short description (0-120 chars)
+    elif len(short_description) > 120:
+        flash("Invalid short description! Max 120 chars")
+        return redirect(request.url)
+
+    # validate description (string)
+    elif type(description) != str:
+        flash("Invalid description!")
+        return redirect(request.url)
+
+    # validate is_hidden checkbox
+    elif is_hidden and not validate.boolean(is_hidden):
+        flash("Invalid is_hidden flag value", "danger")
+        return redirect(request.url)
+
+    # validate is_public checkbox
+    elif is_public and not validate.boolean(is_public):
+        flash("Invalid is_public flag value", "danger")
+        return redirect(request.url)
+
+    # update course information
+    # invitation code is updated separately
+    code = get_course_invitation_code(course_id)
+    update_course(
+        course_id,
+        name,
+        short_description,
+        description,
+        code,
+        is_hidden,
+        is_public,
+    )
+
+    # show success msg
+    flash("Successfully updated the course!", "success")
+
+    return redirect(f"/courses/{course_id}/edit")
+
+
+# update invitation code
+@profile.route("/dashboard/edit-invite", methods=["POST"])
+def edit_invitation_code():
+    # if user is not logged in
+    user = session.get("user")
+    if not user:
+        return abort(401)
+
+    # if user is not a teacher
+    if user["type"] != "TEACHER":
+        return abort(403)
+
+    # get request body
+    values = request.form
+    course_id = values.get("course_id")
+    invitation_code = values.get("invitation_code")
+
+    course = find_by_id(course_id)
+
+    # if course was not found
+    if not course:
+        return abort(404)
+
+    # if teacher isn't responsible for this course
+    enrolled = is_enrolled(course_id, user["id"])
+    if not enrolled:
+        return abort(403)
+
+    # validate invitation code (alphanumeric, max 15 chars)
+    if not invitation_code.isalnum() or len(invitation_code) > 15:
+        flash("Invalid invitation code! Max 15 characters (a-Z, 0-9)", "danger")
+        return redirect(request.url)
+
+    # update course information
+    update_course(
+        course_id,
+        course.name,
+        course.short_description,
+        course.description,
+        invitation_code,
+        course.is_hidden,
+        course.is_public,
+    )
+
+    # show success msg
+    flash(
+        "Successfully updated invite code! NOTE: See the question mark",
+        "success",
+    )
+
+    return redirect(f"/courses/{course_id}/edit")
