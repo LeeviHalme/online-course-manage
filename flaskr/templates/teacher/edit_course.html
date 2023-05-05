@@ -17,186 +17,312 @@
   </nav>
 </div>
 <div class="row">
-  <div class="col-md-6">
-    <form action="/profile/dashboard/edit-course" method="post">
-      <div class="form-floating mb-3">
-        <input
-          type="text"
-          class="form-control"
-          id="courseName"
-          name="name"
-          value="{{course.name}}"
-        />
-        <label for="courseName">Course Name</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input
-          type="text"
-          class="form-control"
-          id="shortDescription"
-          name="short_description"
-          value="{{course.short_description}}"
-        />
-        <label for="shortDescription">Short Description (120 characters)</label>
-      </div>
-      <div class="form-floating mb-3">
-        <textarea
-          class="form-control"
-          id="courseDescription"
-          name="description"
-          style="height: 200px"
+  <div class="col-md-12">
+    <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link active"
+          id="pills-general-tab"
+          data-bs-toggle="pill"
+          data-bs-target="#pills-general"
+          type="button"
+          role="tab"
+          aria-controls="pills-general"
+          aria-selected="true"
         >
-{{course.description}}</textarea
+          General
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="pills-materials-tab"
+          data-bs-toggle="pill"
+          data-bs-target="#pills-materials"
+          type="button"
+          role="tab"
+          aria-controls="pills-materials"
+          aria-selected="false"
         >
-        <label for="courseDescription">Description (supports markdown)</label>
-      </div>
-      <div class="form-check">
-        {% if course.is_hidden %}
-        <input
-          class="form-check-input"
-          type="checkbox"
-          id="isHidden"
-          name="is_hidden"
-          checked
-        />
-        {% else %}
-        <input
-          class="form-check-input"
-          type="checkbox"
-          id="isHidden"
-          name="is_hidden"
-        />
-        {% endif %}
-        <label class="form-check-label" for="isHidden">
-          Hide course from the public courses page
-        </label>
-      </div>
-      <div class="form-check">
-        {% if course.is_public %}
-        <input
-          class="form-check-input"
-          type="checkbox"
-          id="isPublic"
-          name="is_public"
-          checked
-        />
-        {% else %}
-        <input
-          class="form-check-input"
-          type="checkbox"
-          id="isPublic"
-          name="is_public"
-        />
-        {% endif %}
-        <label class="form-check-label" for="isPublic">
-          Allow public joining (disables invitation code)
-        </label>
-      </div>
-      <input type="hidden" name="course_id" value="{{course.id}}" />
-      <button class="btn btn-primary mt-3" type="submit">Save changes</button>
-    </form>
+          Materials
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="pills-exercises-tab"
+          data-bs-toggle="pill"
+          data-bs-target="#pills-exercises"
+          type="button"
+          role="tab"
+          aria-controls="pills-exercises"
+          aria-selected="false"
+        >
+          Exercises
+        </button>
+      </li>
+    </ul>
   </div>
-  <div class="col-md-6">
-    <small class="text-secondary"
-      >Invitation Code
-      <style>
-        .custom-popup {
-          --bs-tooltip-max-width: 350px;
-        }
-      </style>
-      <i
-        class="fas fa-question-circle"
-        data-bs-custom-class="custom-popup"
-        data-bs-toggle="tooltip"
-        data-bs-placement="top"
-        data-bs-title="Changing the invitation code doesn't remove students which have joined with the old code. To remove students from the course, use the participant manager below."
-      ></i
-    ></small>
-    <form action="/profile/dashboard/edit-invite" method="post">
-      <div class="d-flex mb-3">
-        <div class="w-100">
-          <input
-            type="text"
-            class="form-control"
-            value="{{invitation_code}}"
-            id="invitationCode"
-            name="invitation_code"
-          />
-        </div>
-        <div class="ms-3 flex-shrink-0">
-          <button
-            type="button"
-            class="btn btn-warning"
-            id="randomInvite"
+</div>
+<div class="tab-content" id="pills-tabContent">
+  <div
+    class="tab-pane fade show active"
+    id="pills-general"
+    role="tabpanel"
+    aria-labelledby="pills-general-tab"
+    tabindex="0"
+  >
+    <div class="row">
+      <div class="col-md-6">
+        <form action="/profile/dashboard/edit-course" method="post">
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="courseName"
+              name="name"
+              value="{{course.name}}"
+            />
+            <label for="courseName">Course Name</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="shortDescription"
+              name="short_description"
+              value="{{course.short_description}}"
+            />
+            <label for="shortDescription"
+              >Short Description (120 characters)</label
+            >
+          </div>
+          <div class="form-floating mb-3">
+            <textarea
+              class="form-control"
+              id="courseDescription"
+              name="description"
+              style="height: 200px"
+            >
+    {{course.description}}</textarea
+            >
+            <label for="courseDescription"
+              >Description (supports markdown)</label
+            >
+          </div>
+          <div class="form-check">
+            {% if course.is_hidden %}
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="isHidden"
+              name="is_hidden"
+              checked
+            />
+            {% else %}
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="isHidden"
+              name="is_hidden"
+            />
+            {% endif %}
+            <label class="form-check-label" for="isHidden">
+              Hide course from the public courses page
+            </label>
+          </div>
+          <div class="form-check">
+            {% if course.is_public %}
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="isPublic"
+              name="is_public"
+              checked
+            />
+            {% else %}
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="isPublic"
+              name="is_public"
+            />
+            {% endif %}
+            <label class="form-check-label" for="isPublic">
+              Allow public joining (disables invitation code)
+            </label>
+          </div>
+          <input type="hidden" name="course_id" value="{{course.id}}" />
+          <button class="btn btn-primary mt-3" type="submit">
+            Save changes
+          </button>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <small class="text-secondary"
+          >Invitation Code
+          <style>
+            .custom-popup {
+              --bs-tooltip-max-width: 350px;
+            }
+          </style>
+          <i
+            class="fas fa-question-circle"
+            data-bs-custom-class="custom-popup"
             data-bs-toggle="tooltip"
             data-bs-placement="top"
-            data-bs-title="Generate random invitation code"
-          >
-            <i class="fas fa-sync text-white"></i>
-          </button>
-          <input type="hidden" name="course_id" value="{{course.id}}" />
-          <button class="btn btn-primary" type="submit">Update</button>
-        </div>
+            data-bs-title="Changing the invitation code doesn't remove students which have joined with the old code. To remove students from the course, use the participant manager below."
+          ></i
+        ></small>
+        <form action="/profile/dashboard/edit-invite" method="post">
+          <div class="d-flex mb-3">
+            <div class="w-100">
+              <input
+                type="text"
+                class="form-control"
+                value="{{invitation_code}}"
+                id="invitationCode"
+                name="invitation_code"
+              />
+            </div>
+            <div class="ms-3 flex-shrink-0">
+              <button
+                type="button"
+                class="btn btn-warning"
+                id="randomInvite"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                data-bs-title="Generate random invitation code"
+              >
+                <i class="fas fa-sync text-white"></i>
+              </button>
+              <input type="hidden" name="course_id" value="{{course.id}}" />
+              <button class="btn btn-primary" type="submit">Update</button>
+            </div>
+          </div>
+        </form>
+        {% if participants|length > 0 %}
+        <table
+          id="courseParticipants"
+          class="table table-striped caption-top"
+          style="width: 100%"
+        >
+          <caption class="text-secondary">
+            Manage participants
+          </caption>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Type</th>
+              <th>Controls</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in participants %}
+            <tr>
+              <td class="text-center align-middle">
+                <img
+                  src="https://api.dicebear.com/6.x/initials/png?seed={{user.name}}"
+                  alt="User's Avatar"
+                  class="rounded-circle"
+                  style="height: 25px; width: 25px"
+                />
+              </td>
+              <td class="align-middle">
+                {{user.name}} {% if user.id == session.user.id %}
+                <b class="text-primary"> (You)</b>
+                {% endif %}
+              </td>
+              <td class="align-middle">{{user.email}}</td>
+              {% if user.type == "TEACHER" %}
+              <td class="text-primary align-middle">Teacher</td>
+              {% elif user.type == "STUDENT" %}
+              <td class="text-secondary align-middle">Student</td>
+              {% endif %}
+              <td class="align-middle">
+                <button
+                  class="btn btn-danger"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  data-bs-custom-class="custom-popup"
+                  data-bs-title="Remove user from the course (they can still join if they know the invitation code)"
+                >
+                  <i class="fas fa-times"></i> Remove
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="text-secondary text-center mt-5">No participants yet.</p>
+        {% endif %}
       </div>
-    </form>
-    {% if participants|length > 0 %}
-    <table
-      id="courseParticipants"
-      class="table table-striped caption-top"
-      style="width: 100%"
-    >
-      <caption class="text-secondary">
-        Manage participants
-      </caption>
-      <thead>
-        <tr>
-          <th></th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Type</th>
-          <th>Controls</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for user in participants %}
-        <tr>
-          <td class="text-center align-middle">
-            <img
-              src="https://api.dicebear.com/6.x/initials/png?seed={{user.name}}"
-              alt="User's Avatar"
-              class="rounded-circle"
-              style="height: 25px; width: 25px"
+    </div>
+  </div>
+  <div
+    class="tab-pane fade"
+    id="pills-materials"
+    role="tabpanel"
+    aria-labelledby="pills-materials-tab"
+    tabindex="0"
+  >
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Add new material</h1>
+        <p>
+          You can add new material for the course
+          <code>{{course.name}}</code> below:
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <form action="/profile/dashboard/create-material" method="post">
+          <input type="hidden" name="course_id" value="{{course.id}}" />
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="materialName"
+              name="name"
+              placeholder="Material name here"
             />
-          </td>
-          <td class="align-middle">
-            {{user.name}} {% if user.id == session.user.id %}
-            <b class="text-primary"> (You)</b>
-            {% endif %}
-          </td>
-          <td class="align-middle">{{user.email}}</td>
-          {% if user.type == "TEACHER" %}
-          <td class="text-primary align-middle">Teacher</td>
-          {% elif user.type == "STUDENT" %}
-          <td class="text-secondary align-middle">Student</td>
-          {% endif %}
-          <td class="align-middle">
-            <button
-              class="btn btn-danger"
-              data-bs-toggle="tooltip"
-              data-bs-placement="top"
-              data-bs-custom-class="custom-popup"
-              data-bs-title="Remove user from the course (they can still join if they know the invitation code)"
-            >
-              <i class="fas fa-times"></i> Remove
-            </button>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-    <p class="text-secondary text-center mt-5">No participants yet.</p>
-    {% endif %}
+            <label for="courseName">Material name</label>
+          </div>
+          <div class="form-floating">
+            <textarea
+              class="form-control"
+              id="materialContent"
+              name="content"
+              style="height: 350px"
+              placeholder="Material content here"
+            ></textarea>
+            <label for="materialContent">Content</label>
+          </div>
+          <button class="btn btn-success mt-3">Create new material</button>
+        </form>
+      </div>
+      <div class="col-md-4">
+        <p class="text-secondary">Already added course materials:</p>
+        <ul>
+          {% for material in materials %}
+          <li>{{material["name"]}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div
+    class="tab-pane fade"
+    id="pills-exercises"
+    role="tabpanel"
+    aria-labelledby="pills-exercises-tab"
+    tabindex="0"
+  >
+    ...
   </div>
 </div>
 {% endblock %} {% block scripts %}

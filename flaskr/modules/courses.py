@@ -163,7 +163,7 @@ def create_course(
     is_public: bool,
     course_teachers: list,
 ):
-    # insert user into database
+    # insert course into database
     params = {
         "name": name,
         "short_description": short_description,
@@ -229,4 +229,23 @@ def update_course(
       id = :course_id
     """
 
+    make_insert(text_query, params)
+
+
+# create course material
+def create_material(course_id: str, name: str, content: str):
+    # insert material into database
+    params = {
+        "name": name,
+        "content": content,
+        "course_id": course_id,
+    }
+    text_query = """
+    INSERT INTO materials (
+        course_id,
+        name,
+        content
+    )
+    VALUES (:course_id, :name, :content)
+    """
     make_insert(text_query, params)

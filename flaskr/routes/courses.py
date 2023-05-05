@@ -188,9 +188,13 @@ def edit_course(course_id: str):
     # (not exposed in find_by_id() by default)
     invitation_code = get_course_invitation_code(course_id)
 
+    # get materials from db
+    materials = get_course_materials(course_id)
+
     return render_template(
         "teacher/edit_course.html",
         course=course,
         participants=participants,
         invitation_code=invitation_code,
+        materials=materials,
     )

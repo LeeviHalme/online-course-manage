@@ -3,6 +3,7 @@ from modules.profile import get_enrolled_courses, validate_email_list
 from modules.courses import (
     create_course,
     update_course,
+    create_material,
     find_by_id,
     is_enrolled,
     get_course_invitation_code,
@@ -157,27 +158,27 @@ def edit_course():
     # validate name (5-120 chars)
     if len(name) < 5 or len(name) > 120:
         flash("Invalid name! Must be between 5-120 chars", "danger")
-        return redirect(request.url)
+        return redirect(f"/courses/{course_id}/edit")
 
     # validate short description (0-120 chars)
     elif len(short_description) > 120:
         flash("Invalid short description! Max 120 chars")
-        return redirect(request.url)
+        return redirect(f"/courses/{course_id}/edit")
 
     # validate description (string)
     elif type(description) != str:
         flash("Invalid description!")
-        return redirect(request.url)
+        return redirect(f"/courses/{course_id}/edit")
 
     # validate is_hidden checkbox
     elif is_hidden and not validate.boolean(is_hidden):
         flash("Invalid is_hidden flag value", "danger")
-        return redirect(request.url)
+        return redirect(f"/courses/{course_id}/edit")
 
     # validate is_public checkbox
     elif is_public and not validate.boolean(is_public):
         flash("Invalid is_public flag value", "danger")
-        return redirect(request.url)
+        return redirect(f"/courses/{course_id}/edit")
 
     # update course information
     # invitation code is updated separately
@@ -229,7 +230,7 @@ def edit_invitation_code():
     # validate invitation code (alphanumeric, max 15 chars)
     if not invitation_code.isalnum() or len(invitation_code) > 15:
         flash("Invalid invitation code! Max 15 characters (a-Z, 0-9)", "danger")
-        return redirect(request.url)
+        return redirect(f"/courses/{course_id}/edit")
 
     # update course information
     update_course(
@@ -245,6 +246,57 @@ def edit_invitation_code():
     # show success msg
     flash(
         "Successfully updated invite code! NOTE: See the question mark",
+        "success",
+    )
+
+    return redirect(f"/courses/{course_id}/edit")
+
+
+# create new material
+@profile.route("/dashboard/create-material", methods=["POST"])
+def create_material_route():
+    # if user is not logged in
+    user = session.get("user")
+    if not user:
+        return abort(401)
+
+    # if user is not a teacher
+    if user["type"] != "TEACHER":
+        return abort(403)
+
+    # get request body
+    values = request.form
+    course_id = values.get("course_id")
+    name = values.get("name")
+    content = values.get("content")
+
+    course = find_by_id(course_id)
+
+    # if course was not found
+    if not course:
+        return abort(404)
+
+    # if teacher isn't responsible for this course
+    enrolled = is_enrolled(course_id, user["id"])
+    if not enrolled:
+        return abort(403)
+
+    # validate name (>0<25 chars)
+    if not name or len(name) == 0 or len(name) > 25:
+        flash(f"Invalid name! (Between 1 and 25 chars)", "danger")
+        return redirect(f"/courses/{course_id}/edit")
+
+    # validate content (>0 chars)
+    elif not content or len(content) == 0:
+        flash("Invalid content!", "danger")
+        return redirect(f"/courses/{course_id}/edit")
+
+    # create material on db
+    create_material(course_id, name, content)
+
+    # show success msg
+    flash(
+        "Successfully created material!",
         "success",
     )
 
