@@ -58,7 +58,10 @@
               <label for="openAnswer">Type your answer here</label>
             </div>
             {% endif %}
-            <div class="d-flex justify-content-end mt-4">
+            <div class="d-flex align-items-center justify-content-end mt-4">
+              <small class="text-secondary me-auto">
+                {{exercise["points"]}} {% if exercise["points"] > 0 %}Points{% else %}Point{% endif %}
+              </small>
               <button class="btn btn-primary" type="submit">Submit</button>
             </div>
           </div>
