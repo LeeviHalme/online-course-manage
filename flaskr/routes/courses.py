@@ -90,14 +90,14 @@ def enroll(course_id: str):
     # if user is already enrolled
     if enrolled:
         flash("You've already enrolled to this course!", "danger")
-        return redirect(request.url)
+        return redirect(f"/courses/{course_id}")
 
     valid = validate_invitation_code(course_id, code)
 
     # if invite code was not valid
     if not valid:
         flash("Invalid invitation code! Please double-check spelling", "danger")
-        return redirect(request.url)
+        return redirect(f"/courses/{course_id}")
 
     # create new participant record
     enroll_to_course(course_id, user["id"])
@@ -105,7 +105,7 @@ def enroll(course_id: str):
     # show success message
     flash("Successfully enrolled to the course!", "success")
 
-    return redirect(request.url)
+    return redirect(f"/courses/{course_id}")
 
 
 # view course materials
