@@ -1,3 +1,5 @@
+![production ci](https://github.com/LeeviHalme/online-course-manager/actions/workflows/prod-cicd.yml/badge.svg)
+
 # Description
 E-Course management platform. Organise online courses efficiently with automatic assignment checking, student/teacher user control and self-enrolment.
 
