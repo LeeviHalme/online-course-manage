@@ -11,6 +11,7 @@ from modules.courses import (
     get_course_exercise_count,
     get_course_participants,
     get_course_invitation_code,
+    get_responsible_teachers,
 )
 from modules.db import serialize_to_dict
 
@@ -45,9 +46,9 @@ def view_course(course_id: str):
     if not course:
         return abort(404)
 
+    user = session.get("user")
     user_enrolled = False
     exercise_count = None
-    user = session.get("user")
     # if user is logged in
     if user:
         # check user enrolment status
@@ -57,11 +58,15 @@ def view_course(course_id: str):
         if user_enrolled:
             exercise_count = get_course_exercise_count(course_id)
 
+    # get responsible teachers to show on the course page
+    teachers = get_responsible_teachers(course_id)
+
     return render_template(
         "view_course.html",
         course=serialize_to_dict(course),
         user_enrolled=user_enrolled,
         exercise_count=exercise_count,
+        responsible_teachers=", ".join(teachers),
     )
 
 

@@ -144,6 +144,22 @@ def get_course_participants(course_id: str):
     return query.fetchall()
 
 
+# get course teachers
+# returns a list of enrolled
+# users names with type = TEACHER
+def get_responsible_teachers(course_id: str):
+    participants = get_course_participants(course_id)
+    to_return = []
+
+    # loop through participants
+    # and add teachers to list
+    for user in participants:
+        if user.type == "TEACHER":
+            to_return.append(user.name)
+
+    return to_return
+
+
 # get course invitation code
 def get_course_invitation_code(course_id: str):
     query = make_query(
