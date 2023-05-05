@@ -42,7 +42,7 @@ Ticked = Completed & Live in Production
   - [ ] Teacher-user features
     - [x] View all courses
     - [ ] Delete a specific course
-    - [ ] Add new course
+    - [x] Add new course
     - [ ] View a specific course
       - [ ] View statistics
       - [ ] View enrolled students
@@ -50,9 +50,10 @@ Ticked = Completed & Live in Production
     - [ ] Edit course
       - [ ] Change/edit course material
       - [ ] Change/edit assignments
-      - [ ] View and reset invite code
-      - [ ] Add new assignment
-      - [ ] Delete an assignment 
+        - [ ] Add new assignment
+        - [ ] Delete an assignment 
+      - [x] View and reset invite code
+      - [x] Edit course details
 
 # Local Setup
 
