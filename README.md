@@ -48,7 +48,7 @@ Ticked = Completed & Live in Production
       - [ ] View enrolled students
       - [ ] View specific student's awarded points
     - [ ] Edit course
-      - [ ] Change/edit course material
+      - [ ] Add course material
       - [ ] Change/edit assignments
         - [ ] Add new assignment
         - [ ] Delete an assignment 
