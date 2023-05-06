@@ -1,5 +1,10 @@
 {% extends "layouts/main.html" %}
 {% block content %}
+<style>
+  .us-none {
+    user-select: none;
+  }
+</style>
 {% if exercises|length > 0 %}
 <div class="row">
   <div class="col-md-2 offset-1">
@@ -29,18 +34,14 @@
     <div class="tab-content" id="pills-tabContent">
       {% for exercise in exercises %}
         <div
-          {% if exercises.index(exercise) == 0 %}
-          class="tab-pane fade show active markdown-preview"
-          {% else %}
-          class="tab-pane fade markdown-preview"
-          {% endif %}
+          class="tab-pane fade markdown-preview {% if exercises.index(exercise) == 0 %}show active{% endif %}"
           id="pills-{{exercises.index(exercise)}}"
           role="tabpanel"
           aria-labelledby="pills-tab-{{exercises.index(exercise)}}"
           tabindex="{{exercises.index(exercise)}}"
         >
           <p class="source-text d-none">{{exercise["question"]}}</p>
-          <div class="p-4 border rounded bg-light">
+          <div class="p-4 mb-3 border rounded bg-light {% if exercise.id in completed %}opacity-50 pe-none us-none{% endif %}">
             <p class="markdown"></p>
             {% if exercise["type"] == "MULTICHOISE" %}
             <p class="fw-bold mb-2">Select the correct answer(s) below</p>
@@ -65,6 +66,9 @@
               <button class="btn btn-primary" type="submit">Submit</button>
             </div>
           </div>
+          {% if exercise.id in completed %}
+          <b>You have already answered this exercise.</b>
+          {% endif %}
         </div>
       {% endfor %}
     </div>

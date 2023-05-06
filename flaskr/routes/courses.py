@@ -13,6 +13,7 @@ from modules.courses import (
     get_course_invitation_code,
     get_responsible_teachers,
 )
+from modules.submissions import get_completed_exercises
 from modules.db import serialize_to_dict
 
 courses = Blueprint("courses", __name__, url_prefix="/courses")
@@ -159,8 +160,13 @@ def view_exercises(course_id: str):
 
     # get exercises from db
     exercises = get_course_exercises(course_id)
+    completed_exercises = get_completed_exercises(course_id, user["id"])
 
-    return render_template("course_exercises.html", exercises=exercises)
+    print(completed_exercises)
+
+    return render_template(
+        "course_exercises.html", exercises=exercises, completed=completed_exercises
+    )
 
 
 # edit course info route
