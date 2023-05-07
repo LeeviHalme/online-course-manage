@@ -40,20 +40,18 @@ Ticked = Completed & Live in Production
       - [ ] View course summary
         - [ ] View statistics
         - [ ] View total awarded points
-        - [ ] Unenroll from the course
+        - [x] Unenroll from the course
   - [ ] Teacher-user features
     - [x] View all courses
     - [ ] Delete a specific course
     - [x] Add new course
     - [ ] View a specific course
       - [ ] View statistics
-      - [ ] View enrolled students
-      - [ ] View specific student's awarded points
-    - [ ] Edit course
+      - [x] View enrolled students
+      - [x] View specific student's awarded points
+    - [x] Edit course
       - [x] Add course material
-      - [ ] Change/edit assignments
-        - [ ] Add new assignment
-        - [ ] Delete an assignment 
+      - [x] Add assignments
       - [x] View and reset invite code
       - [x] Edit course details
 
