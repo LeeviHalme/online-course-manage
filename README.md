@@ -28,7 +28,7 @@ Ticked = Completed & Live in Production
   - [x] Ability to register as a teacher or as a student
     - [x] Add validation to user input
 - [ ] Courses
-  - [ ] Student-user features
+  - [x] Student-user features **Completed**
     - [x] View all courses
     - [x] View courses you've enrolled in
     - [x] View a specific course
@@ -37,9 +37,9 @@ Ticked = Completed & Live in Production
         - [x] View course assignments
         - [x] Answer to exercise questions
       - [x] Enroll using invite code
-      - [ ] View course summary
-        - [ ] View statistics
-        - [ ] View total awarded points
+      - [x] View course summary
+        - [x] View statistics
+        - [x] View total awarded points
         - [x] Unenroll from the course
   - [ ] Teacher-user features
     - [x] View all courses
