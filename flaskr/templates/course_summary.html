@@ -1,0 +1,25 @@
+{% extends "layouts/main.html" %} {% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <h1 class="mb-4">Course summary</h1>
+    <small class="text-secondary">Exercise Summary:</small>
+    <p class="mb-1">
+      Total Points:
+      <b>{{total_points}} / {{max_points}} ({{points_percentage}} %)</b>
+    </p>
+    <p>
+      Number of exercises completed:
+      <b
+        >{{total_completed}} / {{total_exercise_count}} ({{exercise_percentage}}
+        %)</b
+      >
+    </p>
+    <small class="text-secondary">Grade:</small>
+    <p>
+      {% if grade %}
+      <b>{{grade}}</b>
+      {% else %} Not graded yet. {% endif %}
+    </p>
+  </div>
+</div>
+{% endblock %}

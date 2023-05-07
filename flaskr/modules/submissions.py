@@ -306,3 +306,50 @@ def get_ungraded_submissions(course_id: str) -> list:
     rows = query.fetchall()
 
     return [serialize_to_dict(row) for row in rows]
+
+
+# get user total points
+def get_user_total_points(user_id: str, course_id: str):
+    text_query = """
+    SELECT
+      SUM(A.points)
+    FROM
+      awarded_points A
+    
+    LEFT JOIN
+      submissions S
+    ON
+      A.submission_id = S.id
+
+    LEFT JOIN
+      exercise_questions EQ
+    ON
+      S.question_id = EQ.id
+
+    GROUP BY
+      EQ.course_id,
+      S.user_id
+
+    HAVING EQ.course_id = :course_id AND S.user_id = :user_id
+    """
+    params = {"course_id": course_id, "user_id": user_id}
+    query = make_query(text_query, params)
+    row = query.fetchone()
+
+    return row[0]
+
+
+# get course max points
+def get_course_max_points(course_id: str):
+    text_query = """
+    SELECT
+      SUM(points)
+    FROM
+      exercise_questions
+    WHERE
+      course_id = :course_id
+    """
+    query = make_query(text_query, {"course_id": course_id})
+    row = query.fetchone()
+
+    return row[0]

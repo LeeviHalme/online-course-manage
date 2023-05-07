@@ -18,6 +18,9 @@ from modules.submissions import (
     get_completed_exercises,
     get_graded_students,
     get_ungraded_submissions,
+    get_user_submissions,
+    get_user_total_points,
+    get_course_max_points,
 )
 from modules.db import serialize_to_dict
 
@@ -261,3 +264,41 @@ def unenroll(course_id: str):
     flash("Successfully un-enrolled from the course!", "success")
 
     return redirect("/courses")
+
+
+# view course summary
+@courses.route("/<course_id>/summary", methods=["GET"])
+def summary(course_id: str):
+    course = find_by_id(course_id)
+
+    # if course was not found
+    if not course:
+        return abort(404)
+
+    # if user is not logged in
+    user = session.get("user")
+    if not user:
+        return abort(401)
+
+    # if user isn't enrolled
+    enrolled = is_enrolled(course_id, user["id"])
+    if not enrolled:
+        return abort(403)
+
+    # get statistics data
+    total_points = get_user_total_points(user["id"], course_id)
+    max_points = get_course_max_points(course_id)
+    points_percentage = (total_points / max_points) * 100
+    total_completed = len(get_user_submissions(user["id"]))
+    total_exercise_count = get_course_exercise_count(course_id)
+    exercise_percentage = (total_completed / total_exercise_count) * 100
+
+    return render_template(
+        "course_summary.html",
+        total_points=total_points,
+        max_points=max_points,
+        points_percentage=round(points_percentage, 2),
+        total_completed=total_completed,
+        total_exercise_count=total_exercise_count,
+        exercise_percentage=round(exercise_percentage, 2),
+    )
