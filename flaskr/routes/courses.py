@@ -165,7 +165,10 @@ def view_exercises(course_id: str):
     print(completed_exercises)
 
     return render_template(
-        "course_exercises.html", exercises=exercises, completed=completed_exercises
+        "course_exercises.html",
+        course_id=course_id,
+        exercises=exercises,
+        completed=completed_exercises,
     )
 
 

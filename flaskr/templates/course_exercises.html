@@ -43,28 +43,32 @@
           <p class="source-text d-none">{{exercise["question"]}}</p>
           <div class="p-4 mb-3 border rounded bg-light {% if exercise.id in completed %}opacity-50 pe-none us-none{% endif %}">
             <p class="markdown"></p>
-            {% if exercise["type"] == "MULTICHOISE" %}
-            <p class="fw-bold mb-2">Select the correct answer(s) below</p>
-            {% for answer in exercise["answers"] %}
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="{{answer[0]}}">
-              <label class="form-check-label">
-                {{ answer[1] }}
-              </label>
-            </div>
-            {% endfor %}
-            {% elif exercise["type"] == "OPEN" %}
-            <div class="form-floating">
-              <textarea class="form-control" placeholder="Type your answer here" id="openAnswer" style="height: 200px"></textarea>
-              <label for="openAnswer">Type your answer here</label>
-            </div>
-            {% endif %}
-            <div class="d-flex align-items-center justify-content-end mt-4">
-              <small class="text-secondary me-auto">
-                {{exercise["points"]}} {% if exercise["points"] > 0 %}Points{% else %}Point{% endif %}
-              </small>
-              <button class="btn btn-primary" type="submit">Submit</button>
-            </div>
+            <form action="/submissions/new" method="post">
+              {% if exercise["type"] == "MULTICHOISE" %}
+              <p class="fw-bold mb-2">Select the correct answer(s) below</p>
+              {% for answer in exercise["answers"] %}
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="answer_id" value="{{answer[0]}}">
+                <label class="form-check-label">
+                  {{ answer[1] }}
+                </label>
+              </div>
+              {% endfor %}
+              {% elif exercise["type"] == "OPEN" %}
+              <div class="form-floating">
+                <textarea class="form-control" placeholder="Type your answer here" id="openAnswer" name="open_answer" style="height: 200px"></textarea>
+                <label for="openAnswer">Type your answer here</label>
+              </div>
+              {% endif %}
+              <input type="hidden" name="course_id" value="{{course_id}}">
+              <input type="hidden" name="question_id" value="{{exercise.id}}">
+              <div class="d-flex align-items-center justify-content-end mt-4">
+                <small class="text-secondary me-auto">
+                  {{exercise["points"]}} {% if exercise["points"] > 0 %}Points{% else %}Point{% endif %}
+                </small>
+                <button class="btn btn-primary" type="submit">Submit</button>
+              </div>
+            </form>
           </div>
           {% if exercise.id in completed %}
           <b>You have already answered this exercise.</b>

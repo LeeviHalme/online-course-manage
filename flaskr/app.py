@@ -7,6 +7,7 @@ from routes.main import main
 from routes.auth import auth
 from routes.courses import courses
 from routes.profile import profile
+from routes.submissions import submissions
 
 # import error handlers
 from modules.error_handlers import not_found, unauthorized, forbidden
@@ -40,6 +41,7 @@ def create_app():
     app.register_blueprint(auth)
     app.register_blueprint(courses)
     app.register_blueprint(profile)
+    app.register_blueprint(submissions)
 
     # register error handlers
     app.register_error_handler(404, not_found)
