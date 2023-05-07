@@ -1,0 +1,17 @@
+{% extends "layouts/main.html" %} {% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <h1>Un-enroll from {{course.name}}</h1>
+    <p class="my-4">
+      Are you sure you want to un-enroll? You will lose access to the course
+      materials and exercises.
+    </p>
+    <div class="d-flex">
+      <form action="/courses/{{course.id}}/unenroll" method="post">
+        <button class="btn btn-danger">Un-enroll</button>
+      </form>
+      <a href="/courses/{{course.id}}" class="btn btn-link"> Go back </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

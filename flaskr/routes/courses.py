@@ -6,6 +6,7 @@ from modules.courses import (
     is_enrolled,
     validate_invitation_code,
     enroll_to_course,
+    unenroll_from_course,
     get_course_materials,
     get_course_exercises,
     get_course_exercise_count,
@@ -228,3 +229,35 @@ def edit_course(course_id: str):
         graded_students=graded_students,
         ungraded_submissions=ungraded_submissions,
     )
+
+
+# unenroll from a course as a student
+@courses.route("/<course_id>/unenroll", methods=["GET", "POST"])
+def unenroll(course_id: str):
+    course = find_by_id(course_id)
+
+    # if course was not found
+    if not course:
+        return abort(404)
+
+    # if user is not logged in
+    user = session.get("user")
+    if not user:
+        return abort(401)
+
+    # if user isn't enrolled
+    enrolled = is_enrolled(course_id, user["id"])
+    if not enrolled:
+        return abort(403)
+
+    # if GET, show the page
+    if request.method == "GET":
+        return render_template("unenroll.html", course=course)
+
+    # unenroll user from the course
+    unenroll_from_course(course_id, user["id"])
+
+    # show success msg
+    flash("Successfully un-enrolled from the course!", "success")
+
+    return redirect("/courses")
