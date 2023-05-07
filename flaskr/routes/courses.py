@@ -70,8 +70,12 @@ def view_course(course_id: str):
     # get responsible teachers to show on the course page
     teachers = get_responsible_teachers(course_id)
 
+    # get course invitation code
+    code = get_course_invitation_code(course_id)
+
     return render_template(
         "view_course.html",
+        code=code,
         course=serialize_to_dict(course),
         user_enrolled=user_enrolled,
         exercise_count=exercise_count,

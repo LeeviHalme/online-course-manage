@@ -145,11 +145,7 @@
           <button type="submit" class="btn btn-primary">Enroll</button>
           {% else %}
           <div class="d-grid w-100">
-            <input
-              type="hidden"
-              name="invitation_code"
-              value="{{course.invitation_code}}"
-            />
+            <input type="hidden" name="invitation_code" value="{{code}}" />
             <button type="submit" class="btn btn-primary">Enroll</button>
           </div>
           {% endif %}
