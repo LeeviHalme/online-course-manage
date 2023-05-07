@@ -164,6 +164,10 @@
                 <span class="text-primary"
                   >{{submission.awarded_points}}/{{submission.max_points}}</span
                 >
+                {% elif submission.awarded_points == 0 %}
+                <span class="text-primary"
+                  >{{submission.awarded_points}}/{{submission.max_points}}</span
+                >
                 {% else %}
                 <b class="text-secondary">Not Graded</b>
                 {% endif %}
