@@ -61,6 +61,20 @@
           Exercises
         </button>
       </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="pills-grading-tab"
+          data-bs-toggle="pill"
+          data-bs-target="#pills-grading"
+          type="button"
+          role="tab"
+          aria-controls="pills-grading"
+          aria-selected="false"
+        >
+          Grading
+        </button>
+      </li>
     </ul>
   </div>
 </div>
@@ -322,9 +336,141 @@
     aria-labelledby="pills-exercises-tab"
     tabindex="0"
   >
-    ...
+    <div class="row">
+      <div class="col-md-8">
+        <p>
+          Add assignments (exercises) to course students. Multichoise-questions
+          are graded automatically as <b>correct = max points</b> and
+          <b>incorrect = 0 points.</b> Open-questions need to be manually graded
+          by any of the course teachers.
+        </p>
+        <form
+          id="exerciseForm"
+          action="/profile/dashboard/add-exercise"
+          method="post"
+        >
+          <div class="form-floating mb-3">
+            <textarea
+              class="form-control"
+              placeholder="# What is 1+1?"
+              id="questionName"
+              style="height: 250px"
+              name="question"
+            ></textarea>
+            <label for="questionName">Question (supports markdown)</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              class="form-control"
+              placeholder="10"
+              id="points"
+              name="points"
+              type="number"
+            />
+            <label for="points">Points (one number only)</label>
+          </div>
+          <div class="form-floating mb-3">
+            <select
+              class="form-select"
+              id="floatingSelect"
+              aria-label="Answer type selection"
+              name="type"
+            >
+              <option selected disabled>Select answer type</option>
+              <option value="MULTICHOISE">Multiple-choice</option>
+              <option value="OPEN">Open answer</option>
+            </select>
+            <label for="floatingSelect">Works with selects</label>
+          </div>
+          <input type="hidden" name="course_id" value="{{course.id}}" />
+          <input
+            type="hidden"
+            id="multichoiseAnswersInput"
+            name="answers"
+            value=""
+          />
+          <button class="btn btn-primary" type="submit">Add assignment</button>
+        </form>
+      </div>
+      <div class="col-md-4">
+        <small class="text-secondary">Multiple-choice answers:</small>
+        <br />
+        <button
+          class="btn btn-success my-3"
+          data-bs-toggle="modal"
+          data-bs-target="#addAnswer"
+        >
+          Add new
+        </button>
+        <ul id="multichoiseAnswers" class="mb-3"></ul>
+        <small class="text-secondary">Already added exercises:</small>
+        <ul>
+          {% for exercise in exercises %}
+          <li>
+            {{exercise.question[0:25]}}... {% if exercise.type == "OPEN" %}<b
+              class="text-primary"
+              >OPEN</b
+            >{% else %}<b>MULTICHOISE</b>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
+<!-- Add multichoise answer -->
+<div
+  class="modal fade"
+  id="addAnswer"
+  tabindex="-1"
+  aria-labelledby="addAnswerLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addAnswerLabel">Add new answer</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-floating mb-3">
+          <input
+            type="email"
+            class="form-control"
+            id="addAnswerInput"
+            placeholder="name@example.com"
+          />
+          <label for="addAnswerInput">Answer</label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            val="off"
+            id="addAnswerCheck"
+          />
+          <label class="form-check-label" for="addAnswerCheck">
+            Correct answer
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" id="addAnswerBtn">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %} {% block scripts %}
 <link
   rel="stylesheet"
@@ -355,6 +501,78 @@
     );
     $("#courseParticipants").DataTable();
     $("#randomInvite").click(() => $("#invitationCode").val(random(15)));
+
+    // Multiple-choice answers
+    let answers = [];
+
+    const renderAnswers = () => {
+      // Clear list
+      $("#multichoiseAnswers").html("");
+      answers.forEach(obj =>
+        $("#multichoiseAnswers").append(
+          `<li>${obj.answer} - ${
+            obj.isCorrect
+              ? "<b class='text-primary'>Correct</b>"
+              : "<b>Incorrect</b>"
+          } <button type="button" class="btn btn-link btn-sm remove-answer-btn" data-id='${
+            obj.id
+          }'>Remove</button></li>`
+        )
+      );
+    };
+    const addAnswer = () => {
+      const answer = $("#addAnswerInput").val();
+      const isCorrect = $("#addAnswerCheck").prop("checked");
+      if (answer.length === 0) return;
+
+      const id = random(10);
+      answers.push({ id, answer, isCorrect });
+      renderAnswers();
+    };
+    const removeAnswer = e => {
+      const id = $(e.target).data("id");
+      answers = [...answers.filter(a => a.id !== id)];
+      renderAnswers();
+    };
+    const submitForm = function (e) {
+      e.preventDefault();
+      const form = $(e.target);
+      const values = new URLSearchParams(form.serialize());
+
+      // If type isn't specified
+      if (values.get("type") === undefined)
+        return alert("Please choose the exercise type!");
+
+      // If type is multichoise and no answers were provided
+      if (values.get("type") === "MULTICHOISE" && answers.length < 2)
+        return alert(
+          "For multiple-choice questions, please provide at least two (2) answers!"
+        );
+
+      // Parse answers into a string consisting:
+      // answer,correct;answer,correct...
+      let inputValue = "";
+      answers.forEach((answer, index) => {
+        const lastIndex = index === answers.length - 1;
+        inputValue += `${answer.answer},${answer.isCorrect}${
+          lastIndex ? "" : ";"
+        }`;
+      });
+
+      $("#multichoiseAnswersInput").val(inputValue);
+      this.submit();
+    };
+
+    $("#addAnswerBtn").click(addAnswer);
+    $(document).on("click", ".remove-answer-btn", removeAnswer);
+    $("#exerciseForm").submit(submitForm);
+
+    const addAnswerModal = document.getElementById("addAnswer");
+    addAnswerModal.addEventListener("hidden.bs.modal", () => {
+      // Clear inputs on modal close
+      $("#addAnswerInput").val("");
+      $("#addAnswerCheck").prop("checked", false);
+    });
   });
 </script>
 {% endblock %}

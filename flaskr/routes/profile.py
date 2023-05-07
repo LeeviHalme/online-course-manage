@@ -4,6 +4,7 @@ from modules.courses import (
     create_course,
     update_course,
     create_material,
+    create_exercise,
     find_by_id,
     is_enrolled,
     get_course_invitation_code,
@@ -303,5 +304,65 @@ def create_material_route():
         "Successfully created material!",
         "success",
     )
+
+    return redirect(f"/courses/{course_id}/edit")
+
+
+# add new exercise
+@profile.route("/dashboard/add-exercise", methods=["POST"])
+def create_exercise_route():
+    # if user is not logged in
+    user = session.get("user")
+    if not user:
+        return abort(401)
+
+    # if user is not a teacher
+    if user["type"] != "TEACHER":
+        return abort(403)
+
+    # get request body
+    values = request.form
+    course_id = values.get("course_id")
+    question = values.get("question")
+    points = values.get("points")
+    question_type = values.get("type")
+    answers = values.get("answers")
+
+    course = find_by_id(course_id)
+
+    # if course was not found
+    if not course:
+        return abort(404)
+
+    # if teacher isn't responsible for this course
+    enrolled = is_enrolled(course_id, user["id"])
+    if not enrolled:
+        return abort(403)
+
+    # validate question name (>0 chars)
+    if not question or len(question) == 0:
+        flash(f"Invalid question!", "danger")
+        return redirect(f"/courses/{course_id}/edit")
+
+    # validate points (integer)
+    elif not points or not points.isdigit():
+        flash("Invalid points! (Must be an integer)", "danger")
+        return redirect(f"/courses/{course_id}/edit")
+
+    # validate type (either 'MULTICHOISE' or 'OPEN')
+    elif not validate.question_type(question_type):
+        flash("Please choose your user type!", "danger")
+        return redirect(f"/courses/{course_id}/edit")
+
+    # validate answers
+    elif question_type == "MULTICHOISE" and not validate.answers_array(answers):
+        flash("Invalid answers!", "danger")
+        return redirect(f"/courses/{course_id}/edit")
+
+    # create new exercise
+    create_exercise(course_id, question, question_type, points, answers)
+
+    # show success msg
+    flash("Successfully created an assignment!", "success")
 
     return redirect(f"/courses/{course_id}/edit")

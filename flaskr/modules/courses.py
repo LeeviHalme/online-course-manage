@@ -1,5 +1,6 @@
 from modules.db import make_query, make_insert, serialize_to_dict
 from modules.auth import get_user_by_email
+import utils.validators as validate
 
 
 # get all courses from db
@@ -265,3 +266,65 @@ def create_material(course_id: str, name: str, content: str):
     VALUES (:course_id, :name, :content)
     """
     make_insert(text_query, params)
+
+
+# create exercise
+def create_exercise(
+    course_id: str, question: str, question_type: str, points: int, answers_str: list
+):
+    # insert exercise question into database
+    params = {
+        "course_id": course_id,
+        "question": question,
+        "points": points,
+        "type": question_type,
+    }
+    text_query = """
+    INSERT INTO exercise_questions (
+        id,
+        course_id,
+        question,
+        points,
+        type
+    )
+    VALUES (
+        gen_random_uuid(),
+        :course_id,
+        :question,
+        :points,
+        :type
+    )
+    RETURNING exercise_questions.id
+    """
+    result = make_insert(text_query, params)
+    returned_values = result.mappings().first()
+    inserted_id = returned_values.get("id")
+
+    # if multiple-choice question
+    if question_type == "MULTICHOISE":
+        # parse csv string to list
+        answers = validate.parse_answers_array(answers_str)
+
+        # loop through answers
+        for answer in answers:
+            # insert exercise answer into database
+            params = {
+                "question_id": inserted_id,
+                "answer": answer.get("answer"),
+                "correct": answer.get("correct"),
+            }
+            text_query = """
+            INSERT INTO exercise_answers (
+                id,
+                question_id,
+                answer,
+                correct
+            )
+            VALUES (
+                gen_random_uuid(),
+                :question_id,
+                :answer,
+                :correct
+            )
+            """
+            result = make_insert(text_query, params)

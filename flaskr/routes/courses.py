@@ -205,10 +205,14 @@ def edit_course(course_id: str):
     # get materials from db
     materials = get_course_materials(course_id)
 
+    # get course exercises
+    exercises = get_course_exercises(course_id)
+
     return render_template(
         "teacher/edit_course.html",
         course=course,
         participants=participants,
         invitation_code=invitation_code,
         materials=materials,
+        exercises=exercises,
     )
