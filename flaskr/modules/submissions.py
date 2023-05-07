@@ -168,7 +168,7 @@ def get_user_submissions(user_id: str):
             }
         )
 
-    return sorted(to_return)
+    return sorted(to_return, key=lambda s: s["created_at"], reverse=True)
 
 
 # add points to submission
