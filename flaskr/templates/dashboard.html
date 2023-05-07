@@ -49,16 +49,15 @@
       <li class="nav-item" role="presentation">
         <button
           class="nav-link"
-          id="pills-profile-tab"
+          id="pills-submissions-tab"
           data-bs-toggle="pill"
-          data-bs-target="#pills-profile"
+          data-bs-target="#pills-submissions"
           type="button"
           role="tab"
-          aria-controls="pills-profile"
+          aria-controls="pills-submissions"
           aria-selected="false"
-          disabled
         >
-          Awarded Points
+          Submissions
         </button>
       </li>
       <li class="nav-item" role="presentation">
@@ -140,12 +139,40 @@
       </div>
       <div
         class="tab-pane fade"
-        id="pills-profile"
+        id="pills-submissions"
         role="tabpanel"
-        aria-labelledby="pills-profile-tab"
+        aria-labelledby="pills-submissions-tab"
         tabindex="0"
       >
-        ...
+        <small class="text-secondary">Your submissions:</small>
+        <table class="table">
+          <thead>
+            <th>Course</th>
+            <th>Question</th>
+            <th>Type</th>
+            <th>Points</th>
+            <th>Time</th>
+          </thead>
+          <tbody>
+            {% for submission in submissions %}
+            <tr>
+              <td>{{submission.course_name}}</td>
+              <td>{{submission.question_name}}</td>
+              <td>{{submission.question_type}}</td>
+              <td>
+                {% if submission.awarded_points %}
+                <span class="text-primary"
+                  >{{submission.awarded_points}}/{{submission.max_points}}</span
+                >
+                {% else %}
+                <b class="text-secondary">Not Graded</b>
+                {% endif %}
+              </td>
+              <td>{{format_date(submission.created_at)}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
       <div
         class="tab-pane fade"

@@ -8,6 +8,7 @@ from modules.courses import (
     is_enrolled,
     get_course_invitation_code,
 )
+from modules.submissions import get_user_submissions
 from datetime import datetime
 import utils.validators as validate
 
@@ -19,7 +20,7 @@ profile = Blueprint("profile", __name__, url_prefix="/profile")
 def context_processor():
     # format date
     def format_date(date: datetime):
-        return date.strftime("%d/%m/%Y")
+        return date.strftime("%d/%m/%Y %H:%M")
 
     return dict(format_date=format_date)
 
@@ -35,7 +36,10 @@ def dashboard():
     # get courses user participates
     courses = get_enrolled_courses(user["id"])
 
-    return render_template("dashboard.html", courses=courses)
+    # get user submissions
+    submissions = get_user_submissions(user["id"])
+
+    return render_template("dashboard.html", courses=courses, submissions=submissions)
 
 
 # create course route

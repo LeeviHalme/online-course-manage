@@ -5,6 +5,7 @@ from modules.submissions import (
     get_question,
     get_answer,
     create_submission,
+    grade_submission,
 )
 
 submissions = Blueprint("submissions", __name__, url_prefix="/submissions")
@@ -61,7 +62,18 @@ def new_submission():
         return abort(403)
 
     # create new submission
-    create_submission(question_id, question.type, user["id"], answer_id, open_answer)
+    new_id = create_submission(
+        question_id, question.type, user["id"], answer_id, open_answer
+    )
+
+    # if multichoise, grade automatically
+    if question.type == "MULTICHOISE":
+        # if correct, give full points
+        if answer.correct:
+            grade_submission(new_id, question.points, None)
+        # else give 0 points
+        else:
+            grade_submission(new_id, 0, None)
 
     flash("Success! Answer to the question saved.", "success")
 
