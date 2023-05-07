@@ -8,6 +8,7 @@ from modules.courses import (
     find_by_id,
     is_enrolled,
     get_course_invitation_code,
+    unenroll_from_course,
 )
 from modules.submissions import (
     get_user_submissions,
@@ -461,5 +462,37 @@ def grade_user():
 
     # show success msg
     flash(f"Successfully graded {student[2]}!", "success")
+
+    return redirect(f"/courses/{course_id}/edit")
+
+
+# kick user from course
+# (removes only participant record)
+@profile.route("/dashboard/kick-user", methods=["POST"])
+def kick_user():
+    # if user is not logged in
+    user = session.get("user")
+    if not user:
+        return abort(401)
+
+    # if user is not a teacher
+    if user["type"] != "TEACHER":
+        return abort(403)
+
+    # get request body
+    values = request.form
+    course_id = values.get("course_id")
+    user_id = values.get("user_id")
+
+    # check that user is enrolled
+    enrolled = is_enrolled(course_id, user_id)
+    if not enrolled:
+        return abort(400)
+
+    # unenroll user from course
+    unenroll_from_course(course_id, user_id)
+
+    # show success msg
+    flash("Successfully kicked user! NOTE: See the question mark", "success")
 
     return redirect(f"/courses/{course_id}/edit")

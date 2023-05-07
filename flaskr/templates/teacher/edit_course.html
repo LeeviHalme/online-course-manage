@@ -256,15 +256,19 @@
               <td class="text-secondary align-middle">Student</td>
               {% endif %}
               <td class="align-middle">
-                <button
-                  class="btn btn-danger"
-                  data-bs-toggle="tooltip"
-                  data-bs-placement="top"
-                  data-bs-custom-class="custom-popup"
-                  data-bs-title="Remove user from the course (they can still join if they know the invitation code)"
-                >
-                  <i class="fas fa-times"></i> Remove
-                </button>
+                <form action="/profile/dashboard/kick-user" method="post">
+                  <input type="hidden" name="course_id" value="{{course.id}}" />
+                  <input type="hidden" name="user_id" value="{{user.id}}" />
+                  <button
+                    class="btn btn-danger"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-custom-class="custom-popup"
+                    data-bs-title="Remove user from the course (they can still join if they know the invitation code)"
+                  >
+                    <i class="fas fa-times"></i> Remove
+                  </button>
+                </form>
               </td>
             </tr>
             {% endfor %}

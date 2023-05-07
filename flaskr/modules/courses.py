@@ -88,6 +88,19 @@ def enroll_to_course(course_id: str, user_id: str):
     make_insert(text_query, params)
 
 
+# remove a participant record
+def unenroll_from_course(course_id: str, user_id: str):
+    # insert user into database
+    params = {
+        "user_id": user_id,
+        "course_id": course_id,
+    }
+    text_query = (
+        "DELETE FROM participants WHERE user_id = :user_id AND course_id = :course_id"
+    )
+    make_insert(text_query, params)
+
+
 # get course materials from db
 def get_course_materials(course_id: str):
     query = make_query(
