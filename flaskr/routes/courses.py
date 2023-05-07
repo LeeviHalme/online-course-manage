@@ -13,7 +13,7 @@ from modules.courses import (
     get_course_invitation_code,
     get_responsible_teachers,
 )
-from modules.submissions import get_completed_exercises
+from modules.submissions import get_completed_exercises, get_graded_students
 from modules.db import serialize_to_dict
 
 courses = Blueprint("courses", __name__, url_prefix="/courses")
@@ -208,6 +208,9 @@ def edit_course(course_id: str):
     # get course exercises
     exercises = get_course_exercises(course_id)
 
+    # get graded students
+    graded_students = get_graded_students(course_id)
+
     return render_template(
         "teacher/edit_course.html",
         course=course,
@@ -215,4 +218,5 @@ def edit_course(course_id: str):
         invitation_code=invitation_code,
         materials=materials,
         exercises=exercises,
+        graded_students=graded_students,
     )

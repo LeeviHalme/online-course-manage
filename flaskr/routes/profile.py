@@ -9,7 +9,8 @@ from modules.courses import (
     is_enrolled,
     get_course_invitation_code,
 )
-from modules.submissions import get_user_submissions
+from modules.submissions import get_user_submissions, grade_course
+from modules.auth import get_user_by_id
 from datetime import datetime
 import utils.validators as validate
 
@@ -364,5 +365,64 @@ def create_exercise_route():
 
     # show success msg
     flash("Successfully created an assignment!", "success")
+
+    return redirect(f"/courses/{course_id}/edit")
+
+
+# grade an open exercise
+@profile.route("/dashboard/grade-exercise", methods=["POST"])
+def grade_exercise():
+    pass
+
+
+# grade a user
+@profile.route("/dashboard/grade-user", methods=["POST"])
+def grade_user():
+    # if user is not logged in
+    user = session.get("user")
+    if not user:
+        return abort(401)
+
+    # if user is not a teacher
+    if user["type"] != "TEACHER":
+        return abort(403)
+
+    # get request body
+    values = request.form
+    course_id = values.get("course_id")
+    user_id = values.get("user_id")
+    grade = values.get("grade")
+
+    course = find_by_id(course_id)
+    student = get_user_by_id(user_id)
+
+    # if course was not found
+    if not course:
+        return abort(404)
+
+    # if student was not found
+    if not student:
+        return abort(404)
+
+    # if graded student isn't enrolled
+    student_enrolled = is_enrolled(course_id, user_id)
+    if not student_enrolled:
+        return abort(400)
+
+    # if teacher isn't responsible for this course
+    enrolled = is_enrolled(course_id, user["id"])
+    if not enrolled:
+        return abort(403)
+
+    # if grade is invalid
+    if not validate.grade_type(grade):
+        flash("Invalid grade!", "danger")
+        return redirect(f"/courses/{course_id}/edit")
+
+    # grade the course
+    grade_course(course_id, user_id, grade)
+
+    # show success msg
+    flash(f"Successfully graded {student[2]}!", "success")
 
     return redirect(f"/courses/{course_id}/edit")

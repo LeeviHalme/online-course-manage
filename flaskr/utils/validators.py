@@ -49,6 +49,24 @@ def question_type(input: str) -> bool:
         return False
 
 
+# Validate SQL GRADE_TYPE
+def grade_type(input: str) -> bool:
+    if input == "L":
+        return True
+    elif input == "E":
+        return True
+    elif input == "M":
+        return True
+    elif input == "C":
+        return True
+    elif input == "B":
+        return True
+    elif input == "A":
+        return True
+    else:
+        return False
+
+
 # validate answers array from creating an exercise
 def answers_array(input: str) -> bool:
     answers = input.split(";")

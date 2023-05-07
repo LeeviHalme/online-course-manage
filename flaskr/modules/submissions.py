@@ -1,5 +1,5 @@
-from modules.db import make_query, make_insert
-from modules.courses import get_course_exercises
+from modules.db import make_query, make_insert, serialize_to_dict
+from modules.courses import get_course_exercises, get_course_participants
 
 
 # get user submission for a exercise
@@ -110,6 +110,7 @@ def get_user_submissions(user_id: str):
       Q.points,
       A.points,
       C.name,
+      C.id,
       S.created_at
     FROM submissions S
     
@@ -131,6 +132,7 @@ def get_user_submissions(user_id: str):
       Q.points,
       A.points,
       C.name,
+      C.id,
       S.created_at
 
     HAVING S.user_id = :user_id
@@ -150,6 +152,7 @@ def get_user_submissions(user_id: str):
             max_points,
             awarded_points,
             course_name,
+            course_id,
             created_at,
         ) = row
         to_return.append(
@@ -164,6 +167,7 @@ def get_user_submissions(user_id: str):
                 "max_points": max_points,
                 "awarded_points": awarded_points,
                 "course_name": course_name,
+                "course_id": course_id,
                 "created_at": created_at,
             }
         )
@@ -182,4 +186,60 @@ def grade_submission(submission_id: str, points: int, comment: str):
     )
     """
     params = {"submission_id": submission_id, "points": points, "comment": comment}
+    make_insert(text_query, params)
+
+
+# get users's course grade
+def get_course_grade(course_id: str, user_id: str):
+    # query for answer existence
+    query = make_query(
+        "SELECT grade FROM completions WHERE user_id = :user_id AND course_id = :course_id",
+        {"user_id": user_id, "course_id": course_id},
+    )
+    row = query.fetchone()
+    return row[0] if row else None
+
+
+# get all students and their course grades
+# TODO: Sum up points and grades using SQL and not python
+def get_graded_students(course_id: str) -> list:
+    participants = get_course_participants(course_id)
+    to_return = []
+
+    for user in participants:
+        user_id, name, email, user_type = user
+        if user_type == "STUDENT":
+            user_submissions = get_user_submissions(user_id)
+            course_submissions = list(
+                filter(lambda s: str(s.get("course_id")) == course_id, user_submissions)
+            )
+            total_points = sum(
+                list(map(lambda s: s.get("awarded_points") or 0, course_submissions))
+            )
+            grade = get_course_grade(course_id, user_id)
+
+            to_return.append(
+                {
+                    "id": user_id,
+                    "name": name,
+                    "email": email,
+                    "total_points": total_points,
+                    "grade": grade,
+                }
+            )
+
+    return to_return
+
+
+# give student a course grade
+def grade_course(course_id: str, user_id: str, grade: str):
+    text_query = """
+    INSERT INTO completions (user_id, course_id, grade)
+    VALUES (
+        :user_id,
+        :course_id,
+        :grade
+    )
+    """
+    params = {"user_id": user_id, "course_id": course_id, "grade": grade}
     make_insert(text_query, params)
