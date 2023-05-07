@@ -31,11 +31,11 @@ Ticked = Completed & Live in Production
   - [ ] Student-user features
     - [x] View all courses
     - [x] View courses you've enrolled in
-    - [ ] View a specific course
+    - [x] View a specific course
       - [x] View course material (text-based) (could implement markup support)
-      - [ ] Course assignments  
+      - [x] Course assignments  
         - [x] View course assignments
-        - [ ] Answer to exercise questions
+        - [x] Answer to exercise questions
       - [x] Enroll using invite code
       - [ ] View course summary
         - [ ] View statistics
@@ -50,7 +50,7 @@ Ticked = Completed & Live in Production
       - [ ] View enrolled students
       - [ ] View specific student's awarded points
     - [ ] Edit course
-      - [ ] Add course material
+      - [x] Add course material
       - [ ] Change/edit assignments
         - [ ] Add new assignment
         - [ ] Delete an assignment 
