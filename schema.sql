@@ -80,10 +80,19 @@ CREATE TABLE exercise_answers (
 
 -- CREATE SUBMISSIONS TABLE
 CREATE TABLE submissions (
+  id UUID NOT NULL PRIMARY KEY,
   question_id UUID NOT NULL REFERENCES exercise_questions(id),
   user_id UUID NOT NULL REFERENCES users(id),
   answer_id UUID REFERENCES exercise_answers(id),
   open_answer TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CREATE AWARDED POINTS TABLE
+CREATE TABLE awarded_points (
+  submission_id UUID NOT NULL REFERENCES submissions(id),
+  points INTEGER NOT NULL,
+  comment TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
