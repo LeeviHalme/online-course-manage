@@ -168,7 +168,7 @@ def get_user_submissions(user_id: str):
             }
         )
 
-    return to_return
+    return sorted(to_return)
 
 
 # add points to submission
