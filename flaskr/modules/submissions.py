@@ -336,7 +336,7 @@ def get_user_total_points(user_id: str, course_id: str):
     query = make_query(text_query, params)
     row = query.fetchone()
 
-    return row[0]
+    return row[0] if row else 0
 
 
 # get course max points
@@ -352,4 +352,4 @@ def get_course_max_points(course_id: str):
     query = make_query(text_query, {"course_id": course_id})
     row = query.fetchone()
 
-    return row[0]
+    return row[0] if row else 0
