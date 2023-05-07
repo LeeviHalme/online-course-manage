@@ -295,6 +295,7 @@ def summary(course_id: str):
 
     return render_template(
         "course_summary.html",
+        course=course,
         total_points=total_points,
         max_points=max_points,
         points_percentage=round(points_percentage, 2),
