@@ -13,6 +13,25 @@ def get_submission(question_id: str, user_id: str):
     return submission
 
 
+# get submission by id
+def get_submission_by_id(submission_id: str):
+    query = make_query(
+        """
+    SELECT
+      question_id,
+      user_id,
+      answer_id,
+      open_answer,
+      created_at
+    FROM submissions
+    WHERE
+      id = :submission_id
+    """,
+        {"submission_id": submission_id},
+    )
+    return query.fetchone()
+
+
 # get user completed exercise UID list
 def get_completed_exercises(course_id: str, user_id: str) -> list:
     exercises = get_course_exercises(course_id)
@@ -243,3 +262,47 @@ def grade_course(course_id: str, user_id: str, grade: str):
     """
     params = {"user_id": user_id, "course_id": course_id, "grade": grade}
     make_insert(text_query, params)
+
+
+# get all ungraded submissions for a course
+def get_ungraded_submissions(course_id: str) -> list:
+    # query for user submissions
+    text_query = """
+    SELECT
+      S.id,
+      S.open_answer,
+      U.name,
+      U.email,
+      Q.question,
+      Q.points,
+      A.created_at
+    FROM submissions S
+    
+    LEFT JOIN users U
+    ON S.user_id = U.id
+
+    LEFT JOIN exercise_questions Q
+    ON S.question_id = Q.id
+
+    LEFT JOIN courses C
+    ON Q.course_id = C.id
+
+    LEFT JOIN awarded_points A
+    ON S.id = A.submission_id
+
+    GROUP BY
+      S.id,
+      S.open_answer,
+      U.name,
+      U.email,
+      Q.question,
+      Q.points,
+      A.created_at,
+      C.id
+
+    HAVING C.id = :course_id AND A.created_at IS NULL
+    """
+    query = make_query(text_query, {"course_id": course_id})
+    rows = query.fetchall()
+
+    return [serialize_to_dict(row) for row in rows]

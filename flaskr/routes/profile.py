@@ -9,7 +9,12 @@ from modules.courses import (
     is_enrolled,
     get_course_invitation_code,
 )
-from modules.submissions import get_user_submissions, grade_course
+from modules.submissions import (
+    get_user_submissions,
+    grade_course,
+    get_submission_by_id,
+    grade_submission,
+)
 from modules.auth import get_user_by_id
 from datetime import datetime
 import utils.validators as validate
@@ -369,10 +374,42 @@ def create_exercise_route():
     return redirect(f"/courses/{course_id}/edit")
 
 
-# grade an open exercise
-@profile.route("/dashboard/grade-exercise", methods=["POST"])
-def grade_exercise():
-    pass
+# grade an open submission
+@profile.route("/dashboard/grade-submission", methods=["POST"])
+def grade_submission_route():
+    # if user is not logged in
+    user = session.get("user")
+    if not user:
+        return abort(401)
+
+    # if user is not a teacher
+    if user["type"] != "TEACHER":
+        return abort(403)
+
+    # get request body
+    values = request.form
+    course_id = values.get("course_id")
+    submission_id = values.get("submission_id")
+    points = values.get("points")
+    comment = values.get("comment")
+
+    submission = get_submission_by_id(submission_id)
+    # if submission was not found
+    if not submission:
+        return abort(404)
+
+    # validate points
+    if not points or not points.isdigit():
+        flash("Invalid points!", "danger")
+        return redirect(f"/courses/{course_id}/edit")
+
+    # grade submission
+    grade_submission(submission_id, points, comment or "")
+
+    # show success msg
+    flash("Successfully graded a submission!", "success")
+
+    return redirect(f"/courses/{course_id}/edit")
 
 
 # grade a user
