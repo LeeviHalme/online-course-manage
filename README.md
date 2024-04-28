@@ -63,13 +63,25 @@ Ticked = Completed & Live in Production
 
 ### Setup
 
-```shell
+1. Clone the repository
+```bash
 git clone https://github.com/LeeviHalme/online-course-manager.git
 ```
-```shell
+```bash
 cd online-course-manager
 ```
-```shell
+
+2. Setup environment
+
+```bash
+mv .env.sample .env
+```
+
+- After renaming the example env file, fill in the values according to your configuration!
+
+3. Starting the compose-project
+
+```bash
 docker-compose up --build
 ```
 
@@ -82,6 +94,24 @@ docker-compose up --build
 ```shell
 docker-compose -f docker-compose.prod.yml up -d --build
 ```
+
+## Docker setup
+
+If you want, you can build and run the Flask app as a seperate image. To do this, first build the image bu running:
+
+```bash
+docker build -f Dockerfiles/Flask.Dockerfile . -t online-course-manager
+```
+
+*NOTE: In order to use the production version, change the file name from Flask.Dockerfile to Flask.Prod.Dockerfile*
+
+After building the image, you can start it up in a container by runnning:
+
+```bash
+docker run -d -p 5000:5000 online-course-manager
+```
+
+*NOTE: This will expose the Flask app in port 5000*
 
 # License
 
